@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BrandManagement } from './brand-management';
+import { ProductImagesComponent } from './product-images.component';
 
-describe('BrandManagement', () => {
-  let component: BrandManagement;
-  let fixture: ComponentFixture<BrandManagement>;
+describe('ProductImagesComponent', () => {
+  let component: ProductImagesComponent;
+  let fixture: ComponentFixture<ProductImagesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BrandManagement]
+      imports: [ProductImagesComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BrandManagement);
+    fixture = TestBed.createComponent(ProductImagesComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

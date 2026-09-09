@@ -22,8 +22,6 @@
           {{ 'nav.products' | translate }}
         </h2>
 
-       
-
       </div>
 
     </div>
@@ -35,18 +33,29 @@
       type="button"
       (click)="addProduct()">
 
-      <mat-icon>add</mat-icon>
+      <mat-icon>
+        add
+      </mat-icon>
 
       {{ 'products.addProduct' | translate }}
 
     </button>
 
   </header>
-<div>
-   <p>
-          {{ 'products.Pagination' | translate }}
-        </p>
-</div>
+
+
+  <!-- ====================================================== -->
+  <!-- PAGINATION INFO -->
+  <!-- ====================================================== -->
+
+  <div class="pagination-info">
+
+    <p>
+      {{ 'products.Pagination' | translate }}
+    </p>
+
+  </div>
+
 
   <!-- ====================================================== -->
   <!-- SEARCH -->
@@ -64,9 +73,14 @@
         type="text"
         [ngModel]="searchTerm()"
         (ngModelChange)="onSearch($event)"
-        [placeholder]="'products.searchPlaceholder' | translate"
-        [attr.aria-label]="'products.searchProducts' | translate"
+        [placeholder]="
+          'products.searchPlaceholder' | translate
+        "
+        [attr.aria-label]="
+          'products.searchProducts' | translate
+        "
       />
+
 
       @if (searchTerm()) {
 
@@ -74,7 +88,9 @@
           type="button"
           class="clear-search"
           (click)="clearSearch()"
-          [attr.aria-label]="'common.clearSearch' | translate">
+          [attr.aria-label]="
+            'common.clearSearch' | translate
+          ">
 
           <mat-icon>
             close
@@ -95,40 +111,35 @@
 
   <div class="filters-wrapper">
 
-
-
-
-    <!-- ==================================================== -->
-    <!-- SUBCATEGORY -->
-    <!-- ==================================================== -->
+    <!-- CATEGORY -->
 
     <div
       class="search-box filter-box"
       [class.filter-disabled]="
-        subCategoryOptions().length === 0
+        categoryOptions().length === 0
       ">
 
       <mat-icon class="search-icon">
-        account_tree
+        category
       </mat-icon>
 
       <select
-        [ngModel]="selectedSubCategory()"
-        (ngModelChange)="onSubCategoryFilterChange($event)"
-        [disabled]="subCategoryOptions().length === 0"
-        aria-label="Subcategory">
+        [ngModel]="selectedCategory()"
+        (ngModelChange)="onCategoryFilterChange($event)"
+        [disabled]="categoryOptions().length === 0"
+        aria-label="Category">
 
         <option value="">
-          {{ 'common.allSubCategories' | translate }}
+          {{ 'common.allCategories' | translate }}
         </option>
 
         @for (
-          subCategory of subCategoryOptions();
-          track subCategory
+          category of categoryOptions();
+          track category
         ) {
 
-          <option [value]="subCategory">
-            {{ subCategory }}
+          <option [value]="category">
+            {{ category }}
           </option>
 
         }
@@ -138,44 +149,7 @@
     </div>
 
 
-    <!-- ==================================================== -->
-    <!-- BRAND -->
-    <!-- ==================================================== -->
-
-    <div class="search-box filter-box">
-
-      <mat-icon class="search-icon">
-        sell
-      </mat-icon>
-
-      <select
-        [ngModel]="selectedBrand()"
-        (ngModelChange)="onBrandFilterChange($event)"
-        aria-label="Brand">
-
-        <option value="">
-          {{ 'common.allBrands' | translate }}
-        </option>
-
-        @for (
-          brand of brandOptions();
-          track brand
-        ) {
-
-          <option [value]="brand">
-            {{ brand }}
-          </option>
-
-        }
-
-      </select>
-
-    </div>
-
-
-    <!-- ==================================================== -->
     <!-- CLEAR FILTERS -->
-    <!-- ==================================================== -->
 
     @if (hasLocalFilters()) {
 
@@ -217,7 +191,9 @@
         mat-icon-button
         type="button"
         (click)="errorMessage.set(null)"
-        [attr.aria-label]="'common.dismissError' | translate">
+        [attr.aria-label]="
+          'common.dismissError' | translate
+        ">
 
         <mat-icon>
           close
@@ -366,11 +342,17 @@
 
             <div class="product-image">
 
-              @if (product.imageUrl) {
+              @if (getPrimaryImage(product)) {
 
                 <img
-                  [src]="getImageUrl(product.imageUrl)"
-                  [alt]="product.nameEn" />
+                  [src]="
+                    getImageUrl(
+                      getPrimaryImage(product)
+                    )
+                  "
+                  [alt]="product.nameEn"
+                  loading="lazy"
+                />
 
               } @else {
 
@@ -442,16 +424,16 @@
 
 
         <!-- ================================================== -->
-        <!-- BRAND -->
+        <!-- CATEGORY -->
         <!-- ================================================== -->
 
-        <ng-container matColumnDef="brand">
+        <ng-container matColumnDef="category">
 
           <th
             mat-header-cell
             *matHeaderCellDef>
 
-            {{ 'products.brand' | translate }}
+            {{ 'products.category' | translate }}
 
           </th>
 
@@ -459,10 +441,23 @@
             mat-cell
             *matCellDef="let product">
 
-            {{
-              product.brand?.nameEn ||
-              ('products.noBrand' | translate)
-            }}
+            @if (product.category) {
+
+              <span class="category-chip">
+
+                {{ product.category.nameEn }}
+
+              </span>
+
+            } @else {
+
+              <span class="no-category">
+
+                {{ 'products.noCategory' | translate }}
+
+              </span>
+
+            }
 
           </td>
 
@@ -470,9 +465,10 @@
 
 
         <!-- ================================================== -->
-        <!-- PRICE -->
+        <!-- ACTUAL PRICE -->
         <!-- ================================================== -->
- <ng-container matColumnDef="price">
+
+        <ng-container matColumnDef="price">
 
           <th
             mat-header-cell
@@ -487,17 +483,23 @@
             *matCellDef="let product"
             class="price-cell">
 
-              <span class="normal-price">
+            <span class="normal-price">
 
-                {{ product.actualPrice | number:'1.2-2' }}
+              {{ product.actualPrice | number:'1.2-2' }}
 
-                {{ 'common.egp' | translate }}
+              {{ 'common.egp' | translate }}
 
-              </span>
+            </span>
 
           </td>
 
         </ng-container>
+
+
+        <!-- ================================================== -->
+        <!-- SELLING PRICE -->
+        <!-- ================================================== -->
+
         <ng-container matColumnDef="sellingPrice">
 
           <th
@@ -513,7 +515,10 @@
             *matCellDef="let product"
             class="price-cell">
 
-            @if (product.discountPercentage > 0) {
+            @if (
+              product.discountPercentage &&
+              product.discountPercentage > 0
+            ) {
 
               <div class="price-wrapper">
 
@@ -581,6 +586,7 @@
               ">
 
               {{
+                product.discountPercentage &&
                 product.discountPercentage > 0
                   ? product.discountPercentage + '%'
                   : '___'
@@ -628,6 +634,7 @@
 
               </span>
 
+
               <span
                 class="stock-status"
                 [class.in-stock]="
@@ -638,12 +645,15 @@
                 ">
 
                 <mat-icon>
+
                   {{
                     product.isInStock
                       ? 'check_circle'
                       : 'cancel'
                   }}
+
                 </mat-icon>
+
 
                 {{
                   product.isInStock
@@ -661,16 +671,16 @@
 
 
         <!-- ================================================== -->
-        <!-- CLASSIFICATION -->
+        <!-- VARIANTS -->
         <!-- ================================================== -->
 
-        <ng-container matColumnDef="subCategories">
+        <ng-container matColumnDef="variants">
 
           <th
             mat-header-cell
             *matHeaderCellDef>
 
-            {{ 'products.classification' | translate }}
+            {{ 'products.VARIANTS.TITLE' | translate }}
 
           </th>
 
@@ -678,31 +688,26 @@
             mat-cell
             *matCellDef="let product">
 
-            <div class="classification">
+            @if (
+              product.variants &&
+              product.variants.length > 0
+            ) {
 
-              @for (
-                subCategory of product.subCategories;
-                track subCategory.id
-              ) {
+              <span class="category-chip">
 
-                <span class="category-chip">
-                  {{ subCategory.nameEn }}
-                </span>
+                {{ product.variants.length }}
 
-              }
+              </span>
 
-              @if (
-                !product.subCategories ||
-                product.subCategories.length === 0
-              ) {
+            } @else {
 
-                <span class="no-category">
-                  {{ 'products.noClassification' | translate }}
-                </span>
+              <span class="no-category">
 
-              }
+                {{ 'products.noVariants' | translate }}
 
-            </div>
+              </span>
+
+            }
 
           </td>
 
@@ -743,6 +748,7 @@
               </mat-icon>
 
             </button>
+
 
             <button
               mat-icon-button
@@ -790,49 +796,58 @@
 
 
       <!-- ==================================================== -->
-      <!-- PAGINATOR -->
+      <!-- MATERIAL PAGINATOR -->
       <!-- ==================================================== -->
 
-   <mat-paginator
-  [length]="filteredProducts().length"
-  [pageSize]="pageSize()"
-  [pageIndex]="pageIndex()"
-  [pageSizeOptions]="[10, 25, 50, 100]"
-  showFirstLastButtons
-  (page)="onPageChange($event)">
-</mat-paginator>
+      <mat-paginator
+        [length]="filteredProducts().length"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[10, 25, 50, 100]"
+        showFirstLastButtons
+        (page)="onPageChange($event)">
+      </mat-paginator>
 
     </div>
 
   }
-@if (hasMore()) {
 
-  <div class="load-more-wrapper">
 
-    <button
-      mat-raised-button
-      class="add-product-btn"
-      type="button"
-      (click)="loadNextPage()"
-      [disabled]="isLoading()">
+  <!-- ====================================================== -->
+  <!-- LOAD MORE -->
+  <!-- ====================================================== -->
 
-      @if (isLoading()) {
+  @if (hasMore()) {
 
-        <mat-spinner diameter="18"></mat-spinner>
+    <div class="load-more-wrapper">
 
-      } @else {
+      <button
+        mat-raised-button
+        class="add-product-btn"
+        type="button"
+        (click)="loadNextPage()"
+        [disabled]="isLoading()">
 
-        <mat-icon>
-          expand_more
-        </mat-icon>
+        @if (isLoading()) {
 
-      }
+          <mat-spinner
+            diameter="18">
+          </mat-spinner>
 
-      {{ 'products.loadMore' | translate }}
+        } @else {
 
-    </button>
+          <mat-icon>
+            expand_more
+          </mat-icon>
 
-  </div>
+        }
 
-}
+        {{ 'products.loadMore' | translate }}
+
+      </button>
+
+    </div>
+
+  }
+
 </div>

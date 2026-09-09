@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddBrand } from './add-brand';
+import { SizeDialogComponent } from './size-dialog.component';
 
-describe('AddBrand', () => {
-  let component: AddBrand;
-  let fixture: ComponentFixture<AddBrand>;
+describe('SizeDialogComponent', () => {
+  let component: SizeDialogComponent;
+  let fixture: ComponentFixture<SizeDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddBrand]
+      imports: [SizeDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddBrand);
+    fixture = TestBed.createComponent(SizeDialogComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -174,7 +174,7 @@ getProductsByName(
     id: number,
     formData: FormData
   ): Observable<void> {
-
+console.log(`${this.apiUrl}/${id}`)
     return this.http.put<void>(
       `${this.apiUrl}/${id}`,
       formData

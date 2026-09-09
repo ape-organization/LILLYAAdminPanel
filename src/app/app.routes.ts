@@ -6,10 +6,10 @@ import { UserManagementComponent } from './components/admin/user/user-management
 import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { BaseLayout } from './components/base-layout/base-layout';
-import { AllSubCategory } from './components/admin/subCategory/all-sub-category/all-sub-category';
 import { Orders } from './components/orders/orders';
-import { BrandManagement } from './components/admin/brand/brand-management/brand-management';
 import { SliderManagementComponent } from './components/admin/slider/slider-management/slider-management.component';
+import { SizesComponent } from './components/admin/size/sizes.component/sizes.component';
+import { HeelSizesComponent } from './components/admin/sizeHeels/heel-sizes.component/heel-sizes.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,9 +25,9 @@ export const routes: Routes = [
  { path: 'slider', component: SliderManagementComponent },
       { path: 'products', component: ProductManagementComponent },
       { path: 'categories', component: CategoryManagementComponent },
-            { path: 'brand', component: BrandManagement },
+            { path: 'sizes', component: SizesComponent },
 
-       { path: 'subCategories', component: AllSubCategory },
+       { path: 'heelsizes', component: HeelSizesComponent },
       { path: 'users', component: UserManagementComponent },
       { path: 'orders', component: Orders }
     ]

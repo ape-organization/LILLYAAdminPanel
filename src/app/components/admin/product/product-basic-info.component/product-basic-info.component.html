@@ -1,0 +1,227 @@
+<section class="form-section">
+
+  <div class="section-heading">
+
+    <div class="heading-icon">
+      <mat-icon>info</mat-icon>
+    </div>
+
+    <div>
+
+      <h3>
+        {{ 'products.basicInformation' | translate }}
+      </h3>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-grid">
+
+    <!-- ================================================= -->
+    <!-- ENGLISH NAME -->
+    <!-- ================================================= -->
+
+    <div class="form-group">
+
+      <label
+        for="productNameEn"
+        class="form-label"
+      >
+        {{ 'products.nameEn' | translate }}
+
+        <span class="required">*</span>
+      </label>
+
+
+      <input
+        id="productNameEn"
+        type="text"
+        class="form-input"
+        formControlName="nameEn"
+        autocomplete="off"
+      />
+
+
+      @if (
+        form.get('nameEn')?.hasError('required') &&
+        form.get('nameEn')?.touched
+      ) {
+
+        <div class="form-error">
+
+          {{ 'products.nameEnRequired' | translate }}
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ARABIC NAME -->
+    <!-- ================================================= -->
+
+    <div class="form-group">
+
+      <label
+        for="productNameAr"
+        class="form-label"
+      >
+        {{ 'products.nameAr' | translate }}
+
+        <span class="required">*</span>
+      </label>
+
+
+      <input
+        id="productNameAr"
+        type="text"
+        class="form-input"
+        formControlName="nameAr"
+        autocomplete="off"
+      />
+
+
+      @if (
+        form.get('nameAr')?.hasError('required') &&
+        form.get('nameAr')?.touched
+      ) {
+
+        <div class="form-error">
+
+          {{ 'products.nameArRequired' | translate }}
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CATEGORY -->
+    <!-- ================================================= -->
+
+    <div class="form-group full-width">
+
+      <label
+        for="productCategory"
+        class="form-label"
+      >
+        {{ 'products.category' | translate }}
+
+        <span class="required">*</span>
+      </label>
+
+
+      <select
+        id="productCategory"
+        class="form-select"
+        formControlName="categoryId"
+      >
+
+        <option
+          [ngValue]="null"
+          disabled
+        >
+
+          {{
+            isLoadingCategories
+              ? ('products.loadingCategories' | translate)
+              : ('products.selectCategory' | translate)
+          }}
+
+        </option>
+
+
+        @for (
+          category of categories;
+          track category.id
+        ) {
+
+          <option
+            [ngValue]="category.id"
+          >
+
+            {{ category.nameEn }}
+            -
+            {{ category.nameAr }}
+
+          </option>
+
+        }
+
+      </select>
+
+
+      @if (
+        form.get('categoryId')?.hasError('required') &&
+        form.get('categoryId')?.touched
+      ) {
+
+        <div class="form-error">
+
+          {{ 'products.selectCategory' | translate }}
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ENGLISH DESCRIPTION -->
+    <!-- ================================================= -->
+
+    <div class="form-group full-width">
+
+      <label
+        for="descriptionEn"
+        class="form-label"
+      >
+
+        {{ 'products.descriptionEn' | translate }}
+
+      </label>
+
+
+      <textarea
+        id="descriptionEn"
+        class="form-textarea"
+        formControlName="descriptionEn"
+      ></textarea>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ARABIC DESCRIPTION -->
+    <!-- ================================================= -->
+
+    <div class="form-group full-width">
+
+      <label
+        for="descriptionAr"
+        class="form-label"
+      >
+
+        {{ 'products.descriptionAr' | translate }}
+
+      </label>
+
+
+      <textarea
+        id="descriptionAr"
+        class="form-textarea"
+        formControlName="descriptionAr"
+      ></textarea>
+
+    </div>
+
+  </div>
+
+</section>

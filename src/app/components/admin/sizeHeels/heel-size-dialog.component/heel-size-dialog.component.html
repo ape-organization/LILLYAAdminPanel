@@ -1,0 +1,177 @@
+<div class="modal-container">
+
+
+  <!-- ========================================= -->
+  <!-- HEADER -->
+  <!-- ========================================= -->
+
+  <div class="modal-header">
+
+    <div class="header-title">
+
+      <div class="title-icon">
+
+        <mat-icon>
+          height
+        </mat-icon>
+
+      </div>
+
+
+      <div>
+
+        <h2>
+
+          @if (isEdit()) {
+
+            {{ 'HEEL_SIZES.EDIT_TITLE' | translate }}
+
+          }
+          @else {
+
+            {{ 'HEEL_SIZES.ADD_TITLE' | translate }}
+
+          }
+
+        </h2>
+
+
+        <p>
+          {{ 'HEEL_SIZES.MODAL_SUBTITLE' | translate }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="close-btn"
+      [disabled]="saving()"
+      (click)="cancel()">
+
+      <mat-icon>
+        close
+      </mat-icon>
+
+    </button>
+
+  </div>
+
+
+
+  <!-- ========================================= -->
+  <!-- BODY -->
+  <!-- ========================================= -->
+
+  <div class="modal-body">
+
+    <div class="form-group">
+
+      <label>
+        {{ 'HEEL_SIZES.NAME' | translate }}
+      </label>
+
+
+      <div class="input-wrapper">
+
+        <mat-icon>
+          height
+        </mat-icon>
+
+
+        <input
+          type="text"
+          [value]="name()"
+
+          (input)="
+            onNameInput(
+              $any($event.target).value
+            )
+          "
+
+          [placeholder]="
+            'HEEL_SIZES.NAME_PLACEHOLDER'
+              | translate
+          "
+
+          maxlength="50"
+          autocomplete="off"
+
+          (keydown.enter)="save()"
+        />
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================================= -->
+  <!-- FOOTER -->
+  <!-- ========================================= -->
+
+  <div class="modal-footer">
+
+
+    <button
+      type="button"
+      class="cancel-btn"
+
+      [disabled]="saving()"
+
+      (click)="cancel()">
+
+      {{ 'COMMON.CANCEL' | translate }}
+
+    </button>
+
+
+
+    <button
+      type="button"
+      class="save-btn"
+
+      [disabled]="
+        saving() ||
+        !name().trim()
+      "
+
+      (click)="save()">
+
+
+      @if (saving()) {
+
+        <mat-spinner
+          diameter="20">
+        </mat-spinner>
+
+      }
+      @else {
+
+        <mat-icon>
+          check
+        </mat-icon>
+
+
+        @if (isEdit()) {
+
+          {{ 'COMMON.SAVE_CHANGES' | translate }}
+
+        }
+        @else {
+
+          {{ 'COMMON.ADD' | translate }}
+
+        }
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

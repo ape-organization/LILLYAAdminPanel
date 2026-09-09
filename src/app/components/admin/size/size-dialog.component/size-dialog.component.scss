@@ -1,0 +1,392 @@
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.modal-container {
+  width: 100%;
+  max-width: 500px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.modal-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 20px;
+
+  border-bottom: 1px solid #eee7df;
+}
+
+
+.header-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+}
+
+
+.title-icon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #f5eee7;
+
+  color: var(--color-accent);
+}
+
+
+.title-icon mat-icon {
+  font-size: 22px;
+
+  width: 22px;
+  height: 22px;
+}
+
+
+.header-title h2 {
+  margin: 0;
+
+  color: var(--color-primary);
+
+  font-size: 18px;
+
+  font-weight: 700;
+}
+
+
+.header-title p {
+  margin: 3px 0 0;
+
+  color: #888;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: #f7f5f3;
+
+  color: #777;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.close-btn:hover {
+  background: #eeeae7;
+
+  color: var(--color-primary);
+}
+
+
+.close-btn:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.modal-body {
+  padding: 24px 20px;
+}
+
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #40332d;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-wrapper {
+  height: 52px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border: 1px solid #ddd5ce;
+
+  border-radius: 12px;
+
+  padding: 0 14px;
+
+  background: white;
+
+  transition: 0.2s ease;
+}
+
+
+.input-wrapper:focus-within {
+  border-color: var(--color-accent);
+
+  box-shadow:
+    0 0 0 3px rgba(184, 138, 90, 0.12);
+}
+
+
+.input-wrapper mat-icon {
+  flex-shrink: 0;
+
+  color: #999;
+}
+
+
+.input-wrapper input {
+  flex: 1;
+
+  min-width: 0;
+
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  padding: 0 6px;
+
+  font-size: 15px;
+
+  color: #342a26;
+}
+
+
+.input-wrapper input::placeholder {
+  color: #aaa;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.modal-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 16px 20px;
+
+  border-top: 1px solid #eee7df;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.cancel-btn,
+.save-btn {
+  min-height: 42px;
+
+  padding: 0 17px;
+
+  border-radius: 10px;
+
+  border: none;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.cancel-btn {
+  background: #f3f1ef;
+
+  color: #625a55;
+}
+
+
+.cancel-btn:hover {
+  background: #e9e6e3;
+}
+
+
+.save-btn {
+  background: var(--color-primary);
+
+  color: white;
+}
+
+
+.save-btn:hover:not(:disabled) {
+  opacity: 0.92;
+
+  transform: translateY(-1px);
+}
+
+
+.save-btn mat-icon {
+  font-size: 19px;
+
+  width: 19px;
+  height: 19px;
+}
+
+
+.save-btn:disabled,
+.cancel-btn:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   RTL
+========================================================= */
+
+[dir="rtl"] .modal-header,
+[dir="rtl"] .modal-body,
+[dir="rtl"] .modal-footer {
+  direction: rtl;
+}
+
+
+[dir="rtl"] .modal-footer {
+  justify-content: flex-start;
+}
+
+
+[dir="rtl"] .input-wrapper {
+  direction: rtl;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .modal-container {
+    max-width: calc(100vw - 32px);
+
+    border-radius: 18px;
+  }
+
+
+  .modal-header {
+    padding: 16px;
+  }
+
+
+  .modal-body {
+    padding: 20px 16px;
+  }
+
+
+  .modal-footer {
+    padding: 14px 16px;
+  }
+
+
+  .header-title {
+    gap: 10px;
+  }
+
+
+  .title-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  .header-title h2 {
+    font-size: 16px;
+  }
+
+
+  .header-title p {
+    display: none;
+  }
+
+
+  .cancel-btn,
+  .save-btn {
+    min-height: 40px;
+
+    padding: 0 14px;
+  }
+
+}

@@ -1,0 +1,277 @@
+<div class="variants-section">
+
+  <!-- ========================================= -->
+  <!-- HEADER -->
+  <!-- ========================================= -->
+
+  <div class="section-header">
+
+    <div class="section-title">
+
+      <div class="section-icon">
+
+        <mat-icon>
+          tune
+        </mat-icon>
+
+      </div>
+
+      <div>
+
+        <h2>
+          {{ 'products.VARIANTS.TITLE' | translate }}
+        </h2>
+
+        <p>
+          {{ 'products.VARIANTS.SUBTITLE' | translate }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="add-variant-button"
+      mat-flat-button
+      (click)="addVariant()"
+      [disabled]="isLoading"
+    >
+
+      <mat-icon>
+        add
+      </mat-icon>
+
+      {{ 'products.VARIANTS.ADD' | translate }}
+
+    </button>
+
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- EMPTY STATE -->
+  <!-- ========================================= -->
+
+  @if (variants.length === 0) {
+
+    <div class="empty-variants">
+
+      <div class="empty-icon">
+
+        <mat-icon>
+          inventory_2
+        </mat-icon>
+
+      </div>
+
+      <h3>
+        {{ 'products.VARIANTS.EMPTY_TITLE' | translate }}
+      </h3>
+
+      <p>
+        {{ 'products.VARIANTS.EMPTY_TEXT' | translate }}
+      </p>
+
+      <button
+        type="button"
+        class="empty-add-button"
+        mat-stroked-button
+        (click)="addVariant()"
+      >
+
+        <mat-icon>
+          add
+        </mat-icon>
+
+        {{ 'products.VARIANTS.ADD_FIRST' | translate }}
+
+      </button>
+
+    </div>
+
+  }
+
+
+  <!-- ========================================= -->
+  <!-- VARIANTS -->
+  <!-- ========================================= -->
+
+  @if (variants.length > 0) {
+
+    <div class="variants-list">
+
+      @for (
+        variant of variants.controls;
+        track variant;
+        let i = $index
+      ) {
+
+        <div
+          class="variant-row"
+          [formGroup]="$any(variant)"
+        >
+
+          <!-- NUMBER -->
+
+          <div class="variant-number">
+
+            {{ i + 1 }}
+
+          </div>
+
+
+          <!-- SIZE -->
+
+          <div class="variant-field">
+
+            <label>
+              {{ 'products.VARIANTS.SIZE' | translate }}
+            </label>
+
+            <select
+              formControlName="sizeId"
+            >
+
+              <option
+                [ngValue]="null"
+              >
+                {{ 'products.VARIANTS.NO_SIZE' | translate }}
+              </option>
+
+              @for (
+                size of sizes;
+                track size.id
+              ) {
+
+                <option
+                  [ngValue]="size.id"
+                >
+                  {{ size.name }}
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+
+          <!-- HEEL SIZE -->
+
+          <div class="variant-field">
+
+            <label>
+              {{ 'products.VARIANTS.HEEL_SIZE' | translate }}
+            </label>
+
+            <select
+              formControlName="heelSizeId"
+            >
+
+              <option
+                [ngValue]="null"
+              >
+                {{ 'products.VARIANTS.NO_HEEL_SIZE' | translate }}
+              </option>
+
+              @for (
+                heelSize of heelSizes;
+                track heelSize.id
+              ) {
+
+                <option
+                  [ngValue]="heelSize.id"
+                >
+                  {{ heelSize.name }}
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+
+          <!-- STOCK -->
+
+          <div class="variant-field stock-field">
+
+            <label>
+              {{ 'products.VARIANTS.STOCK' | translate }}
+            </label>
+
+            <input
+              type="number"
+              min="0"
+              step="1"
+              formControlName="stockQuantity"
+            />
+
+          </div>
+
+
+          <!-- REMOVE -->
+
+          <button
+            type="button"
+            class="remove-variant-button"
+            mat-icon-button
+            (click)="removeVariant(i)"
+            [attr.aria-label]="
+              'products.VARIANTS.REMOVE' | translate
+            "
+          >
+
+            <mat-icon>
+              delete_outline
+            </mat-icon>
+
+          </button>
+
+
+          <!-- VALIDATION -->
+
+          @if (isVariantInvalid(variant)) {
+
+            <div class="variant-error">
+
+              <mat-icon>
+                error_outline
+              </mat-icon>
+
+              <span>
+                {{ 'products.VARIANTS.SELECTION_REQUIRED' | translate }}
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- INFORMATION -->
+    <!-- ========================================= -->
+
+    <div class="variants-info">
+
+      <mat-icon>
+        info
+      </mat-icon>
+
+      <span>
+        {{ 'products.VARIANTS.INFO' | translate }}
+      </span>
+
+    </div>
+
+  }
+
+</div>

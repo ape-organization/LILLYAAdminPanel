@@ -1,0 +1,213 @@
+<div class="images-section">
+
+  <!-- HEADER -->
+
+  <div class="section-header">
+
+    <div class="section-title">
+
+      <div class="section-icon">
+
+        <mat-icon>
+          photo_library
+        </mat-icon>
+
+      </div>
+
+      <div>
+
+        <h2>
+          {{ 'products.IMAGES.TITLE' | translate }}
+        </h2>
+
+        <p>
+          {{ 'products.IMAGES.SUBTITLE' | translate }}
+        </p>
+
+      </div>
+
+    </div>
+
+    <label
+      class="upload-button"
+      for="productImages"
+    >
+
+      <mat-icon>
+        add_photo_alternate
+      </mat-icon>
+
+      <span>
+        {{ 'products.IMAGES.ADD' | translate }}
+      </span>
+
+    </label>
+
+    <input
+      id="productImages"
+      type="file"
+      accept="image/*"
+      multiple
+      hidden
+      (change)="onFilesSelected($event)"
+    />
+
+  </div>
+
+
+  <!-- EMPTY -->
+
+  @if (images.length === 0) {
+
+    <div class="empty-images">
+
+      <mat-icon>
+        photo_library
+      </mat-icon>
+
+      <h3>
+        {{ 'products.IMAGES.EMPTY_TITLE' | translate }}
+      </h3>
+
+      <p>
+        {{ 'products.IMAGES.EMPTY_TEXT' | translate }}
+      </p>
+
+      <label
+        class="empty-upload"
+        for="productImages"
+      >
+
+        <mat-icon>
+          upload
+        </mat-icon>
+
+        {{ 'products.IMAGES.SELECT' | translate }}
+
+      </label>
+
+    </div>
+
+  }
+
+
+  <!-- IMAGES -->
+
+  @if (images.length > 0) {
+
+    <div
+      class="images-grid"
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="drop($event)"
+    >
+
+      @for (
+        image of images;
+        track image.previewUrl;
+        let i = $index
+      ) {
+
+        <div
+          class="image-card"
+          cdkDrag
+        >
+
+          <!-- DRAG -->
+
+          <div
+            class="drag-handle"
+            cdkDragHandle
+          >
+
+            <mat-icon>
+              drag_indicator
+            </mat-icon>
+
+          </div>
+
+
+          <!-- IMAGE -->
+
+          <div class="image-wrapper">
+
+            <img
+              [src]="image.previewUrl"
+              [alt]="'Product image ' + (i + 1)"
+            />
+
+
+            <!-- PRIMARY -->
+
+            @if (i === 0) {
+
+              <div class="primary-badge">
+
+                <mat-icon>
+                  star
+                </mat-icon>
+
+                <span>
+                  {{ 'products.IMAGES.PRIMARY' | translate }}
+                </span>
+
+              </div>
+
+            }
+
+
+            <!-- REMOVE -->
+
+            <button
+              type="button"
+              class="remove-button"
+              mat-icon-button
+              (click)="removeImage(i)"
+            >
+
+              <mat-icon>
+                close
+              </mat-icon>
+
+            </button>
+
+          </div>
+
+
+          <!-- FOOTER -->
+
+          <div class="image-footer">
+
+            <span class="image-order">
+              {{ i + 1 }}
+            </span>
+
+            <span class="image-label">
+              {{ 'products.IMAGES.ORDER' | translate }}
+              {{ i + 1 }}
+            </span>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <div class="images-hint">
+
+      <mat-icon>
+        drag_indicator
+      </mat-icon>
+
+      <span>
+        {{ 'products.IMAGES.DRAG_HINT' | translate }}
+      </span>
+
+    </div>
+
+  }
+
+</div>

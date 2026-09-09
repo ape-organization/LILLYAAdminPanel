@@ -1,0 +1,186 @@
+<div class="management-page">
+
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <div class="header-icon">
+        <mat-icon>height</mat-icon>
+      </div>
+
+      <div>
+        <h1>
+          {{ 'HEEL_SIZES.TITLE' | translate }}
+        </h1>
+
+        <p>
+          {{ 'HEEL_SIZES.SUBTITLE' | translate }}
+        </p>
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      class="add-btn"
+      (click)="openAddModal()">
+
+      <mat-icon>add</mat-icon>
+
+      <span>
+        {{ 'HEEL_SIZES.ADD' | translate }}
+      </span>
+
+    </button>
+
+  </div>
+
+  <div class="search-box">
+
+    <mat-icon>search</mat-icon>
+
+    <input
+      type="text"
+      [value]="searchTerm()"
+      (input)="onSearch($any($event.target).value)"
+      [placeholder]="'HEEL_SIZES.SEARCH' | translate"
+    />
+
+    @if (searchTerm()) {
+
+      <button
+        type="button"
+        class="clear-search"
+        (click)="clearSearch()">
+
+        <mat-icon>close</mat-icon>
+
+      </button>
+
+    }
+
+  </div>
+
+  @if (loading()) {
+
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+  }
+
+  @else if (filteredHeelSizes().length === 0) {
+
+    <div class="empty-state">
+
+      <div class="empty-icon">
+        <mat-icon>height</mat-icon>
+      </div>
+
+      <h3>
+        {{ 'HEEL_SIZES.NO_SIZES' | translate }}
+      </h3>
+
+      <p>
+        {{ 'HEEL_SIZES.NO_SIZES_DESCRIPTION' | translate }}
+      </p>
+
+      @if (!searchTerm()) {
+
+        <button
+          type="button"
+          class="empty-add-btn"
+          (click)="openAddModal()">
+
+          <mat-icon>add</mat-icon>
+
+          {{ 'HEEL_SIZES.ADD' | translate }}
+
+        </button>
+
+      }
+
+    </div>
+
+  }
+
+  @else {
+
+    <div class="items-card">
+
+      <div class="card-header">
+
+        <div>
+
+          <h2>
+            {{ 'HEEL_SIZES.LIST_TITLE' | translate }}
+          </h2>
+
+          <span class="count">
+            {{ filteredHeelSizes().length }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="items-list">
+
+        @for (
+          size of filteredHeelSizes();
+          track size.id
+        ) {
+
+          <div class="item-row">
+
+            <div class="item-info">
+
+              <div class="item-icon">
+                <mat-icon>height</mat-icon>
+              </div>
+
+              <div class="item-name">
+                {{ size.name }}
+              </div>
+
+            </div>
+
+            <div class="item-actions">
+
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                (click)="openEditModal(size)">
+
+                <mat-icon>edit</mat-icon>
+
+              </button>
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                [disabled]="deletingId() === size.id"
+                (click)="deleteHeelSize(size)">
+
+                @if (deletingId() === size.id) {
+                  <mat-spinner diameter="18"></mat-spinner>
+                }
+                @else {
+                  <mat-icon>delete</mat-icon>
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

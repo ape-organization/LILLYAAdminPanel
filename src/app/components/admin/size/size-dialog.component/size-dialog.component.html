@@ -1,0 +1,153 @@
+<div class="modal-container">
+
+  <!-- ===================================================== -->
+  <!-- HEADER -->
+  <!-- ===================================================== -->
+
+  <div class="modal-header">
+
+    <div class="header-title">
+
+      <div class="title-icon">
+
+        <mat-icon>
+          straighten
+        </mat-icon>
+
+      </div>
+
+
+      <div>
+
+        <h2>
+
+          @if (editingSize) {
+
+            {{ 'SIZES.EDIT_TITLE' | translate }}
+
+          }
+          @else {
+
+            {{ 'SIZES.ADD_TITLE' | translate }}
+
+          }
+
+        </h2>
+
+
+        <p>
+          {{ 'SIZES.MODAL_SUBTITLE' | translate }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="close-btn"
+      [disabled]="saving()"
+      (click)="close()">
+
+      <mat-icon>
+        close
+      </mat-icon>
+
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- BODY -->
+  <!-- ===================================================== -->
+
+  <div class="modal-body">
+
+    <div class="form-group">
+
+      <label>
+        {{ 'SIZES.NAME' | translate }}
+      </label>
+
+
+      <div class="input-wrapper">
+
+        <mat-icon>
+          straighten
+        </mat-icon>
+
+
+        <input
+          type="text"
+          [value]="sizeName()"
+          (input)="sizeName.set($any($event.target).value)"
+          [placeholder]="'SIZES.NAME_PLACEHOLDER' | translate"
+          maxlength="50"
+          autocomplete="off"
+          (keyup.enter)="saveSize()"
+        />
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- FOOTER -->
+  <!-- ===================================================== -->
+
+  <div class="modal-footer">
+
+    <button
+      type="button"
+      class="cancel-btn"
+      [disabled]="saving()"
+      (click)="close()">
+
+      {{ 'COMMON.CANCEL' | translate }}
+
+    </button>
+
+
+    <button
+      type="button"
+      class="save-btn"
+      [disabled]="saving() || !sizeName().trim()"
+      (click)="saveSize()">
+
+      @if (saving()) {
+
+        <mat-spinner
+          diameter="20">
+        </mat-spinner>
+
+      }
+      @else {
+
+        <mat-icon>
+          check
+        </mat-icon>
+
+
+        @if (editingSize) {
+
+          {{ 'COMMON.SAVE_CHANGES' | translate }}
+
+        }
+        @else {
+
+          {{ 'COMMON.ADD' | translate }}
+
+        }
+
+      }
+
+    </button>
+
+  </div>
+
+</div>

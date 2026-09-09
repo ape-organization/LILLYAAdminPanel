@@ -1,12 +1,44 @@
 
 {
+    
+  "SIZES": {
+    "TITLE": "Sizes",
+    "SUBTITLE": "Manage available product sizes",
+    "ADD": "Add Size",
+    "ADD_TITLE": "Add Size",
+    "EDIT_TITLE": "Edit Size",
+    "MODAL_SUBTITLE": "Enter the size name",
+    "NAME": "Size Name",
+    "NAME_PLACEHOLDER": "Enter size name",
+    "SEARCH": "Search sizes...",
+    "LIST_TITLE": "All Sizes",
+    "NO_SIZES": "No sizes found",
+    "NO_SIZES_DESCRIPTION": "There are no sizes to display."
+  },
+
+  "HEEL_SIZES": {
+    "TITLE": "Heel Sizes",
+    "SUBTITLE": "Manage available heel sizes",
+    "ADD": "Add Heel Size",
+    "ADD_TITLE": "Add Heel Size",
+    "EDIT_TITLE": "Edit Heel Size",
+    "MODAL_SUBTITLE": "Enter the heel size",
+    "NAME": "Heel Size",
+    "NAME_PLACEHOLDER": "Enter heel size",
+    "SEARCH": "Search heel sizes...",
+    "LIST_TITLE": "All Heel Sizes",
+    "NO_SIZES": "No heel sizes found",
+    "NO_SIZES_DESCRIPTION": "There are no heel sizes to display."
+  },
+
+
   "common": {
     "saveChanges":"Save Changes",
       "allCategories": "All Categories",
     "allSubCategories": "All Subcategories",
     "allBrands": "All Brands",
     "clearFilters": "Clear Filters",
-    "cosmetics": "Cosmetics",
+    "cosmetics": "LILLY",
     "login": "LOGIN",
     "logout": "LOGOUT",
     "admin": "ADMIN",
@@ -179,6 +211,93 @@
   },
 
   "products": {
+"VARIANTS": {
+"TITLE": "Product Variants",
+"SUBTITLE": "Manage sizes, heel sizes, and stock for this product",
+"ADD": "Add Variant",
+
+  "EMPTY_TITLE": "No Variants Added",
+  "EMPTY_TEXT": "Add variants to allow customers to choose different sizes or heel sizes",
+  "ADD_FIRST": "Add First Variant",
+
+  "SIZE": "Size",
+  "NO_SIZE": "No Size",
+
+  "HEEL_SIZE": "Heel Size",
+  "NO_HEEL_SIZE": "No Heel Size",
+
+  "STOCK": "Stock Quantity",
+
+  "REMOVE": "Remove Variant",
+
+  "SELECTION_REQUIRED": "Please select a size or heel size",
+
+  "INFO": "You can add different combinations of sizes and heel sizes for this product. Each variant has its own stock quantity."
+}
+,
+"IMAGES": {
+"TITLE": "Product Images",
+"SUBTITLE": "Add and organize images for your product",
+"ADD": "Add Images",
+"EMPTY_TITLE": "No Images Added",
+"EMPTY_TEXT": "Add product images to showcase your product",
+"SELECT": "Select Images",
+"PRIMARY": "Primary Image",
+"ORDER": "Image",
+"DRAG_HINT": "Drag and drop images to change their order"
+},
+"ADD_TITLE": "Add Product",
+"EDIT_TITLE": "Edit Product",
+"ADD_SUBTITLE": "Create a new product and add it to your store",
+"EDIT_SUBTITLE": "Update the product information and settings",
+
+"BASIC_INFO": {
+  "TITLE": "Basic Information",
+  "SUBTITLE": "Enter the main information about your product"
+},
+
+"NAME_EN": "Product Name (English)",
+"NAME_AR": "Product Name (Arabic)",
+
+"NAME_EN_PLACEHOLDER": "Enter product name in English",
+"NAME_AR_PLACEHOLDER": "Enter product name in Arabic",
+
+"NAME_REQUIRED": "Product name is required",
+
+"ACTUAL_PRICE": "Actual Price",
+"SELLING_PRICE": "Selling Price",
+"DISCOUNT": "Discount Percentage",
+"FINAL_PRICE": "Final Price",
+
+"CATEGORY": "Category",
+"SELECT_CATEGORY": "Select Category",
+
+"STOCK": {
+  "TITLE": "Stock & Availability",
+  "SUBTITLE": "Manage product stock and availability",
+
+  "QUANTITY": "Stock Quantity",
+  "QUANTITY_HINT": "Enter the available quantity of this product",
+
+  "STATUS": "Stock Status",
+  "IN_STOCK": "In Stock",
+  "OUT_OF_STOCK": "Out of Stock"
+},
+
+"DESCRIPTION": {
+  "TITLE": "Product Description",
+  "SUBTITLE": "Add descriptions for both English and Arabic",
+
+  "ENGLISH": "Description (English)",
+  "ARABIC": "Description (Arabic)",
+
+  "ENGLISH_PLACEHOLDER": "Enter product description in English",
+  "ARABIC_PLACEHOLDER": "Enter product description in Arabic"
+},
+
+
+
+
     "selected":"selected",
     "noProductsFound":"No Products Found",
     "startAddingFirstProduct":"Start Adding First Product",

@@ -1,1056 +1,626 @@
+<div class="modal-overlay">
 
-<div class="product-dialog">
+  <div class="modal-container">
 
-  <!-- ========================================================= -->
-  <!-- HEADER -->
-  <!-- ========================================================= -->
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
 
-  <div class="dialog-header">
+    <div class="modal-header">
 
-    <div class="header-content">
+      <div class="header-title">
 
-      <div class="title-icon">
-        <mat-icon>inventory_2</mat-icon>
-      </div>
-
-      <div class="title-content">
-
-        <h2>
-          {{
-            isEditing()
-              ? ('products.editProduct' | translate)
-              : ('products.addNewProduct' | translate)
-          }}
-        </h2>
-
-        <p>
-          {{
-            isEditing()
-              ? ('products.editProductSubtitle' | translate)
-              : ('products.addProductSubtitle' | translate)
-          }}
-        </p>
-
-      </div>
-
-    </div>
-
-    <button
-      type="button"
-      mat-icon-button
-      class="close-button"
-      (click)="cancel()"
-      [attr.aria-label]="'common.close' | translate"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-
-  </div>
-
-
-  <!-- ========================================================= -->
-  <!-- FORM -->
-  <!-- ========================================================= -->
-
-  <form
-    [formGroup]="productForm"
-    (ngSubmit)="save()"
-    novalidate
-  >
-
-    <!-- ======================================================= -->
-    <!-- IMAGE -->
-    <!-- ======================================================= -->
-
-    <section class="form-section image-section">
-
-      <div class="section-heading">
-
-        <div>
-          <h3>
-            {{ 'products.productImage' | translate }}
-          </h3>
-
-        </div>
-
-      </div>
-
-      <div
-        class="image-upload"
-        [class.has-image]="hasImage()"
-      >
-
-        <div
-          class="image-preview"
-          (click)="fileInput.click()"
-          tabindex="0"
-          role="button"
-          (keydown.enter)="fileInput.click()"
-          (keydown.space)="fileInput.click(); $event.preventDefault()"
-        >
-
-          @if (imagePreview()) {
-
-            <img
-              [src]="imagePreview()!"
-              [alt]="'products.productImage' | translate"
-            />
-
-            <div class="image-overlay">
-              <mat-icon>photo_camera</mat-icon>
-
-              <span>
-                {{ 'products.changeImage' | translate }}
-              </span>
-            </div>
-
-          } @else {
-
-            <div class="image-placeholder">
-
-              <mat-icon>add_photo_alternate</mat-icon>
-
-              <span>
-                {{ 'products.image' | translate }}
-              </span>
-
-              <small>
-                PNG, JPG, WEBP · Max 5MB
-              </small>
-
-            </div>
-
-          }
-
-        </div>
-
-        <input
-          #fileInput
-          type="file"
-          hidden
-          accept="image/png,image/jpeg,image/webp"
-          (change)="onFileSelected($event)"
-        />
-
-      </div>
-
-    </section>
-
-
-    <!-- ======================================================= -->
-    <!-- BASIC INFORMATION -->
-    <!-- ======================================================= -->
-
-    <section class="form-section">
-
-      <div class="section-heading">
-
-        <div class="heading-icon">
-          <mat-icon>info</mat-icon>
-        </div>
-
-        <div>
-          <h3>
-            {{ 'products.basicInformation' | translate }}
-          </h3>
-
-          
-        </div>
-
-      </div>
-
-
-      <div class="form-grid">
-
-        <!-- English Name -->
-
-        <div class="form-group">
-
-          <label
-            for="productNameEn"
-            class="form-label"
-          >
-            {{ 'products.nameEn' | translate }}
-            <span class="required">*</span>
-          </label>
-
-          <input
-            id="productNameEn"
-            type="text"
-            class="form-input"
-            formControlName="nameEn"
-            autocomplete="off"
-          />
-
-          @if (
-            productForm.get('nameEn')?.hasError('required') &&
-            productForm.get('nameEn')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.nameEnRequired' | translate }}
-            </div>
-
-          }
-
-        </div>
-
-
-        <!-- Arabic Name -->
-
-        <div class="form-group">
-
-          <label
-            for="productNameAr"
-            class="form-label"
-          >
-            {{ 'products.nameAr' | translate }}
-            <span class="required">*</span>
-          </label>
-
-          <input
-            id="productNameAr"
-            type="text"
-            class="form-input"
-            formControlName="nameAr"
-            autocomplete="off"
-          />
-
-          @if (
-            productForm.get('nameAr')?.hasError('required') &&
-            productForm.get('nameAr')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.nameArRequired' | translate }}
-            </div>
-
-          }
-
-        </div>
-
-
-        <!-- actual Price -->
-
-        <div class="form-group">
-
-          <label
-            for="productPrice"
-            class="form-label"
-          >
-            {{ 'products.actualPrice' | translate }}
-            <span class="required">*</span>
-          </label>
-
-          <div class="currency-input">
-
-            <span class="currency-prefix">
-              EGP
-            </span>
-
-            <input
-              id="productPrice"
-              type="number"
-              min="0"
-              step="0.01"
-              class="form-input currency-input-field"
-              formControlName="actualPrice"
-          
-            />
-
-          </div>
-
-          @if (
-            productForm.get('actualPrice')?.hasError('required') &&
-            productForm.get('actualPrice')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.priceRequired' | translate }}
-            </div>
-
-          }
-
-          @if (
-            productForm.get('actualPrice')?.hasError('min') &&
-            productForm.get('actualPrice')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.priceInvalid' | translate }}
-            </div>
-
-          }
-
-        </div>
-
-   <!--selling Price -->
-
-        <div class="form-group">
-
-          <label
-            for="productPrice"
-            class="form-label"
-          >
-            {{ 'products.sellingPrice' | translate }}
-            <span class="required">*</span>
-          </label>
-
-          <div class="currency-input">
-
-            <span class="currency-prefix">
-              EGP
-            </span>
-
-            <input
-              id="productPrice"
-              type="number"
-              min="0"
-              step="0.01"
-              class="form-input currency-input-field"
-              formControlName="sellingPrice"
-           
-            />
-
-          </div>
-
-          @if (
-            productForm.get('sellingPrice')?.hasError('required') &&
-            productForm.get('sellingPrice')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.priceRequired' | translate }}
-            </div>
-
-          }
-
-          @if (
-            productForm.get('sellingPrice')?.hasError('min') &&
-            productForm.get('sellingPrice')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.priceInvalid' | translate }}
-            </div>
-
-          }
-
-        </div>
-
-        <!-- Discount -->
-
-        <div class="form-group">
-
-          <label
-            for="productDiscount"
-            class="form-label"
-          >
-            {{ 'products.discount' | translate }}
-          </label>
-
-          <div class="percentage-input">
-
-            <input
-              id="productDiscount"
-              type="number"
-              min="0"
-              max="100"
-              step="1"
-              class="form-input"
-              formControlName="discountPercentage"
-            />
-
-            <span class="percentage-suffix">
-              %
-            </span>
-
-          </div>
-
-          @if (
-            productForm.get('discountPercentage')?.hasError('min') &&
-            productForm.get('discountPercentage')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.discountInvalid' | translate }}
-            </div>
-
-          }
-
-          @if (
-            productForm.get('discountPercentage')?.hasError('max') &&
-            productForm.get('discountPercentage')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.discountInvalid' | translate }}
-            </div>
-
-          }
-@if (getPriceAfterDiscount() !== null) {
-
-  <div class="discounted-price-preview">
-
-    <span class="discounted-price-label">
-      {{ 'products.priceAfterDiscount' | translate }}
-    </span>
-
-    <strong>
-      {{ getPriceAfterDiscount() | number:'1.2-2' }}
-    </strong>
-
-  </div>
-
-}
-        </div>
-
-
-        <!-- Discount Preview -->
-
-        @if (
-          (productForm.get('discountPercentage')?.value ?? 0) > 0 &&
-          (productForm.get('price')?.value ?? 0) > 0
-        ) {
-
-          <div class="discount-preview full-width">
-
-            <div class="discount-icon">
-              <mat-icon>local_offer</mat-icon>
-            </div>
-
-            <div class="discount-content">
-
-              <span class="discount-label">
-                {{ 'products.finalPrice' | translate }}
-              </span>
-
-              <strong>
-                {{ discountedPrice() | number:'1.2-2' }}
-                EGP
-              </strong>
-
-            </div>
-
-          </div>
-
-        }
-
-
-        <!-- Stock Quantity -->
-
-        <div class="form-group">
-
-          <label
-            for="stockQuantity"
-            class="form-label"
-          >
-            {{ 'products.stockQuantity' | translate }}
-            <span class="required">*</span>
-          </label>
-
-          <input
-            id="stockQuantity"
-            type="number"
-            min="0"
-            step="1"
-            class="form-input"
-            formControlName="stockQuantity"
-          />
-
-          @if (
-            productForm.get('stockQuantity')?.hasError('required') &&
-            productForm.get('stockQuantity')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.stockQuantityRequired' | translate }}
-            </div>
-
-          }
-
-          @if (
-            productForm.get('stockQuantity')?.hasError('min') &&
-            productForm.get('stockQuantity')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.stockQuantityInvalid' | translate }}
-            </div>
-
-          }
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ======================================================= -->
-    <!-- STOCK STATUS -->
-    <!-- ======================================================= -->
-
-    <section class="form-section">
-
-      <div class="section-heading">
-
-        <div class="heading-icon">
-          <mat-icon>inventory</mat-icon>
-        </div>
-
-        <div>
-          <h3>
-            {{ 'products.stockStatus' | translate }}
-          </h3>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="stock-card"
-        [class.in-stock]="productForm.get('isInStock')?.value === true"
-        [class.out-of-stock]="productForm.get('isInStock')?.value === false"
-      >
-
-        <div class="stock-status-icon">
+        <div class="title-icon">
 
           <mat-icon>
-            {{
-              productForm.get('isInStock')?.value === true
-                ? 'check_circle'
-                : 'cancel'
-            }}
+            {{ isEditing() ? 'edit' : 'add_box' }}
           </mat-icon>
 
         </div>
 
-
-        <div class="stock-status-content">
-
-          <strong>
-            {{
-              productForm.get('isInStock')?.value === true
-                ? ('products.inStock' | translate)
-                : ('products.outOfStock' | translate)
-            }}
-          </strong>
-
-          <span>
-            {{
-              productForm.get('isInStock')?.value === true
-                ? ('products.productAvailable' | translate)
-                : ('products.productUnavailable' | translate)
-            }}
-          </span>
-
-        </div>
-
-
-        <div
-          class="stock-radio-group"
-          role="radiogroup"
-          [attr.aria-label]="'products.stockStatus' | translate"
-        >
-
-          <label class="stock-radio">
-
-            <input
-              type="radio"
-              formControlName="isInStock"
-              [value]="true"
-            />
-
-            <span class="radio-mark"></span>
-
-            <span class="radio-label">
-              {{ 'products.inStock' | translate }}
-            </span>
-
-          </label>
-
-
-          <label class="stock-radio">
-
-            <input
-              type="radio"
-              formControlName="isInStock"
-              [value]="false"
-            />
-
-            <span class="radio-mark"></span>
-
-            <span class="radio-label">
-              {{ 'products.outOfStock' | translate }}
-            </span>
-
-          </label>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ======================================================= -->
-    <!-- CLASSIFICATION -->
-    <!-- ======================================================= -->
-
-    <section class="form-section">
-
-      <div class="section-heading">
-
-        <div class="heading-icon">
-          <mat-icon>category</mat-icon>
-        </div>
-
         <div>
-          <h3>
-            {{ 'products.classification' | translate }}
-          </h3>
+
+          <h1>
+            {{
+              isEditing()
+                ? ('products.EDIT_TITLE' | translate)
+                : ('products.ADD_TITLE' | translate)
+            }}
+          </h1>
+
+          <p>
+            {{
+              isEditing()
+                ? ('products.EDIT_SUBTITLE' | translate)
+                : ('products.ADD_SUBTITLE' | translate)
+            }}
+          </p>
 
         </div>
 
       </div>
 
 
-      <div class="form-grid">
+      <button
+        type="button"
+        class="close-button"
+        mat-icon-button
+        (click)="cancel()"
+      >
 
-        <!-- Brand -->
+        <mat-icon>
+          close
+        </mat-icon>
 
-        <div class="form-group">
+      </button>
 
-          <label
-            for="productBrand"
-            class="form-label"
-          >
-            {{ 'products.brand' | translate }}
-            <span class="required">*</span>
-          </label>
-
-          <select
-            id="productBrand"
-            class="form-select"
-            formControlName="brandId"
-          >
-
-            <option
-              [ngValue]="null"
-              disabled
-            >
-              {{
-                isLoadingBrands()
-                  ? ('products.loadingBrands' | translate)
-                  : ('products.selectBrand' | translate)
-              }}
-            </option>
-
-            @for (
-              brand of brands();
-              track brand.id
-            ) {
-
-              <option [ngValue]="brand.id">
-                {{ brand.nameEn }} - {{ brand.nameAr }}
-              </option>
-
-            }
-
-          </select>
-
-          @if (
-            productForm.get('brandId')?.hasError('required') &&
-            productForm.get('brandId')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.selectBrand' | translate }}
-            </div>
-
-          }
-
-        </div>
+    </div>
 
 
-        <!-- Category -->
+    <!-- ========================================= -->
+    <!-- BODY -->
+    <!-- ========================================= -->
 
-        <div class="form-group">
+    <form
+      class="modal-body"
+      [formGroup]="productForm"
+      (ngSubmit)="save()"
+    >
 
-          <label
-            for="productCategory"
-            class="form-label"
-          >
-            {{ 'products.category' | translate }}
-            <span class="required">*</span>
-          </label>
 
-          <select
-            id="productCategory"
-            class="form-select"
-            formControlName="categoryId"
-            (change)="onCategorySelectChange()"
-          >
+      <!-- ======================================= -->
+      <!-- IMAGES -->
+      <!-- ======================================= -->
 
-            <option
-              [ngValue]="null"
-              disabled
-            >
-              {{
-                isLoadingCategories()
-                  ? ('products.loadingCategories' | translate)
-                  : ('products.selectCategory' | translate)
-              }}
-            </option>
+      <app-product-images
+        [existingImages]="product()?.images"
+        (imagesChange)="onImagesChange($event)"
+      />
 
-            @for (
-              category of categories();
-              track category.id
-            ) {
 
-              <option [ngValue]="category.id">
-                {{ category.nameEn }} - {{ category.nameAr }}
-              </option>
+      <!-- ======================================= -->
+      <!-- BASIC INFORMATION -->
+      <!-- ======================================= -->
 
-            }
+      <section class="form-section">
 
-          </select>
+        <div class="section-heading">
 
-          @if (
-            productForm.get('categoryId')?.hasError('required') &&
-            productForm.get('categoryId')?.touched
-          ) {
+          <div class="section-heading-icon">
 
-            <div class="form-error">
-              {{ 'products.selectCategory' | translate }}
-            </div>
+            <mat-icon>
+              info
+            </mat-icon>
 
-          }
+          </div>
+
+          <div>
+
+            <h2>
+              {{ 'products.BASIC_INFO.TITLE' | translate }}
+            </h2>
+
+            <p>
+              {{ 'products.BASIC_INFO.SUBTITLE' | translate }}
+            </p>
+
+          </div>
 
         </div>
 
 
-        <!-- ================================================= -->
-        <!-- CUSTOM SUBCATEGORY MULTI SELECT -->
-        <!-- ================================================= -->
-
-        <div class="form-group full-width">
-
-          <label class="form-label">
-            {{ 'products.subcategories' | translate }}
-            <span class="required">*</span>
-          </label>
+        <div class="form-grid">
 
 
-          <div
-            class="subcategory-dropdown"
-            [class.open]="isSubCategoryDropdownOpen()"
-            [class.disabled]="
-              !selectedCategoryId() ||
-              isLoadingSubCategories()
-            "
-          >
+          <!-- NAME EN -->
 
-            <button
-              type="button"
-              class="subcategory-select-trigger"
-              [disabled]="
-                !selectedCategoryId() ||
-                isLoadingSubCategories()
+          <div class="form-field">
+
+            <label for="nameEn">
+
+              {{ 'products.NAME_EN' | translate }}
+
+              <span>*</span>
+
+            </label>
+
+            <input
+              id="nameEn"
+              type="text"
+              formControlName="nameEn"
+              [placeholder]="
+                'products.NAME_EN_PLACEHOLDER' | translate
               "
-              (click)="toggleSubCategoryDropdown()"
-            >
+            />
 
-              <span class="subcategory-trigger-text">
+            @if (
+              productForm.get('nameEn')?.touched &&
+              productForm.get('nameEn')?.invalid
+            ) {
 
-                @if (isLoadingSubCategories()) {
+              <small class="field-error">
 
-                  {{ 'products.loadingSubCategories' | translate }}
+                {{ 'products.NAME_REQUIRED' | translate }}
 
-                } @else if (!selectedCategoryId()) {
-
-                  {{ 'products.selectCategoryFirst' | translate }}
-
-                } @else if (selectedSubCategoryCount() === 0) {
-
-                  {{ 'products.selectSubCategories' | translate }}
-
-                } @else {
-
-                  {{ selectedSubCategoryCount() }}
-                  {{
-                    selectedSubCategoryCount() === 1
-                      ? ('products.subcategory' | translate)
-                      : ('products.subcategories' | translate)
-                  }}
-                  {{ 'products.selected' | translate }}
-
-                }
-
-              </span>
-
-
-              <mat-icon>
-                {{
-                  isSubCategoryDropdownOpen()
-                    ? 'keyboard_arrow_up'
-                    : 'keyboard_arrow_down'
-                }}
-              </mat-icon>
-
-            </button>
-
-
-            @if (isSubCategoryDropdownOpen()) {
-
-              <div class="subcategory-dropdown-panel">
-
-                @if (filteredSubCategories().length === 0) {
-
-                  <div class="subcategory-empty">
-
-                    <mat-icon>category</mat-icon>
-
-                    <span>
-                      {{ 'products.noSubCategoriesAvailable' | translate }}
-                    </span>
-
-                  </div>
-
-                } @else {
-
-                  @for (
-                    subCategory of filteredSubCategories();
-                    track subCategory.id
-                  ) {
-
-                    <label
-                      class="subcategory-option"
-                      [class.selected]="
-                        selectedSubCategoryIds().includes(subCategory.id)
-                      "
-                    >
-
-                      <input
-                        type="checkbox"
-                        [checked]="
-                          selectedSubCategoryIds().includes(subCategory.id)
-                        "
-                        (change)="
-                          toggleSubCategory(
-                            subCategory.id,
-                            $event
-                          )
-                        "
-                      />
-
-                      <span class="checkbox-mark">
-
-                        @if (
-                          selectedSubCategoryIds().includes(subCategory.id)
-                        ) {
-                          <mat-icon>check</mat-icon>
-                        }
-
-                      </span>
-
-                      <span class="subcategory-name">
-                        {{ subCategory.nameEn }}
-                        -
-                        {{ subCategory.nameAr }}
-                      </span>
-
-                    </label>
-
-                  }
-
-                }
-
-              </div>
+              </small>
 
             }
 
           </div>
 
 
-          @if (selectedSubCategoryCount() > 0) {
+          <!-- NAME AR -->
 
-            <div class="selected-subcategories">
+          <div class="form-field">
+
+            <label for="nameAr">
+
+              {{ 'products.NAME_AR' | translate }}
+
+              <span>*</span>
+
+            </label>
+
+            <input
+              id="nameAr"
+              type="text"
+              dir="rtl"
+              formControlName="nameAr"
+              [placeholder]="
+                'products.NAME_AR_PLACEHOLDER' | translate
+              "
+            />
+
+            @if (
+              productForm.get('nameAr')?.touched &&
+              productForm.get('nameAr')?.invalid
+            ) {
+
+              <small class="field-error">
+
+                {{ 'products.NAME_REQUIRED' | translate }}
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- ACTUAL PRICE -->
+
+          <div class="form-field">
+
+            <label for="actualPrice">
+
+              {{ 'products.ACTUAL_PRICE' | translate }}
+
+              <span>*</span>
+
+            </label>
+
+            <div class="input-with-icon">
+
+              <mat-icon>
+                payments
+              </mat-icon>
+
+              <input
+                id="actualPrice"
+                type="number"
+                min="0"
+                step="0.01"
+                formControlName="actualPrice"
+              />
+
+            </div>
+
+          </div>
+
+
+          <!-- SELLING PRICE -->
+
+          <div class="form-field">
+
+            <label for="sellingPrice">
+
+              {{ 'products.SELLING_PRICE' | translate }}
+
+              <span>*</span>
+
+            </label>
+
+            <div class="input-with-icon">
+
+              <mat-icon>
+                sell
+              </mat-icon>
+
+              <input
+                id="sellingPrice"
+                type="number"
+                min="0"
+                step="0.01"
+                formControlName="sellingPrice"
+              />
+
+            </div>
+
+          </div>
+
+
+          <!-- DISCOUNT -->
+
+          <div class="form-field">
+
+            <label for="discountPercentage">
+
+              {{ 'products.DISCOUNT' | translate }}
+
+            </label>
+
+            <div class="input-with-icon">
+
+              <mat-icon>
+                percent
+              </mat-icon>
+
+              <input
+                id="discountPercentage"
+                type="number"
+                min="0"
+                max="100"
+                step="0.01"
+                formControlName="discountPercentage"
+              />
+
+            </div>
+
+          </div>
+
+
+          <!-- FINAL PRICE -->
+
+          <div class="price-preview">
+
+            <span>
+              {{ 'products.FINAL_PRICE' | translate }}
+            </span>
+
+            <strong>
+              {{ getPriceAfterDiscount() | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+
+          <!-- CATEGORY -->
+
+          <div class="form-field">
+
+            <label for="categoryId">
+
+              {{ 'products.CATEGORY' | translate }}
+
+              <span>*</span>
+
+            </label>
+
+            <select
+              id="categoryId"
+              formControlName="categoryId"
+            >
+
+              <option [ngValue]="null">
+
+                {{ 'products.SELECT_CATEGORY' | translate }}
+
+              </option>
 
               @for (
-                id of selectedSubCategoryIds();
-                track id
+                category of categories();
+                track category.id
               ) {
 
-                <div class="subcategory-chip">
+                <option
+                  [ngValue]="category.id"
+                >
 
-                  <span>
-                    {{ getSubCategoryName(id) }}
-                  </span>
+                  {{ category.nameEn }}
 
-                  <button
-                    type="button"
-                    (click)="removeSubCategory(id)"
-                    [attr.aria-label]="'common.remove' | translate"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-
-                </div>
+                </option>
 
               }
 
+            </select>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+      <!-- ======================================= -->
+      <!-- STOCK -->
+      <!-- ======================================= -->
+
+      <section class="form-section">
+
+        <div class="section-heading">
+
+          <div class="section-heading-icon">
+
+            <mat-icon>
+              inventory_2
+            </mat-icon>
+
+          </div>
+
+          <div>
+
+            <h2>
+              {{ 'products.STOCK.TITLE' | translate }}
+            </h2>
+
+            <p>
+              {{ 'products.STOCK.SUBTITLE' | translate }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="stock-layout">
+
+
+          <div class="form-field stock-input">
+
+            <label for="stockQuantity">
+
+              {{ 'products.STOCK.QUANTITY' | translate }}
+
+            </label>
+
+            <input
+              id="stockQuantity"
+              type="number"
+              min="0"
+              step="1"
+              formControlName="stockQuantity"
+            />
+
+            <small>
+              {{ 'products.STOCK.QUANTITY_HINT' | translate }}
+            </small>
+
+          </div>
+
+
+          <div class="stock-status">
+
+            <label>
+              {{ 'products.STOCK.STATUS' | translate }}
+            </label>
+
+            <div class="radio-group">
+
+              <label class="radio-option">
+
+                <input
+                  type="radio"
+                  [value]="true"
+                  formControlName="isInStock"
+                />
+
+                <span class="radio-dot"></span>
+
+                <span>
+                  {{ 'products.STOCK.IN_STOCK' | translate }}
+                </span>
+
+              </label>
+
+
+              <label class="radio-option">
+
+                <input
+                  type="radio"
+                  [value]="false"
+                  formControlName="isInStock"
+                />
+
+                <span class="radio-dot"></span>
+
+                <span>
+                  {{ 'products.STOCK.OUT_OF_STOCK' | translate }}
+                </span>
+
+              </label>
+
             </div>
 
-          }
-
-
-          @if (
-            productForm.get('subCategoryIds')?.hasError('required') &&
-            productForm.get('subCategoryIds')?.touched
-          ) {
-
-            <div class="form-error">
-              {{ 'products.selectSubCategory' | translate }}
-            </div>
-
-          }
+          </div>
 
         </div>
 
-      </div>
-
-    </section>
+      </section>
 
 
-    <!-- ======================================================= -->
-    <!-- DESCRIPTION -->
-    <!-- ======================================================= -->
+      <!-- ======================================= -->
+      <!-- VARIANTS -->
+      <!-- ======================================= -->
 
-    <section class="form-section">
-
-      <div class="section-heading">
-
-        <div class="heading-icon">
-          <mat-icon>description</mat-icon>
-        </div>
-
-        <div>
-          <h3>
-            {{ 'products.description' | translate }}
-          </h3>
-
-        </div>
-
-      </div>
+      <app-product-variants
+        [variants]="variants"
+        [sizes]="sizes()"
+        [heelSizes]="heelSizes()"
+        [isLoading]="isLoading()"
+      />
 
 
-      <div class="form-grid">
+      <!-- ======================================= -->
+      <!-- DESCRIPTIONS -->
+      <!-- ======================================= -->
 
-        <!-- English Description -->
+      <section class="form-section">
 
-        <div class="form-group full-width">
+        <div class="section-heading">
 
-          <label
-            for="descriptionEn"
-            class="form-label"
-          >
-            {{ 'products.descriptionEn' | translate }}
-          </label>
+          <div class="section-heading-icon">
 
-          <textarea
-            id="descriptionEn"
-            class="form-textarea"
-            formControlName="descriptionEn"
-          ></textarea>
+            <mat-icon>
+              description
+            </mat-icon>
+
+          </div>
+
+          <div>
+
+            <h2>
+              {{ 'products.DESCRIPTION.TITLE' | translate }}
+            </h2>
+
+            <p>
+              {{ 'products.DESCRIPTION.SUBTITLE' | translate }}
+            </p>
+
+          </div>
 
         </div>
 
 
-        <!-- Arabic Description -->
+        <div class="description-grid">
 
-        <div class="form-group full-width">
 
-          <label
-            for="descriptionAr"
-            class="form-label"
-          >
-            {{ 'products.descriptionAr' | translate }}
-          </label>
+          <!-- ENGLISH -->
 
-          <textarea
-            id="descriptionAr"
-            class="form-textarea"
-            formControlName="descriptionAr"
-          ></textarea>
+          <div class="form-field">
+
+            <label for="descriptionEn">
+
+              {{ 'products.DESCRIPTION.ENGLISH' | translate }}
+
+            </label>
+
+            <textarea
+              id="descriptionEn"
+              rows="5"
+              formControlName="descriptionEn"
+              [placeholder]="
+                'products.DESCRIPTION.ENGLISH_PLACEHOLDER'
+                  | translate
+              "
+            ></textarea>
+
+          </div>
+
+
+          <!-- ARABIC -->
+
+          <div class="form-field">
+
+            <label for="descriptionAr">
+
+              {{ 'products.DESCRIPTION.ARABIC' | translate }}
+
+            </label>
+
+            <textarea
+              id="descriptionAr"
+              rows="5"
+              dir="rtl"
+              formControlName="descriptionAr"
+              [placeholder]="
+                'products.DESCRIPTION.ARABIC_PLACEHOLDER'
+                  | translate
+              "
+            ></textarea>
+
+          </div>
+
 
         </div>
 
-      </div>
-
-    </section>
+      </section>
 
 
-    <!-- ======================================================= -->
-    <!-- ERROR -->
-    <!-- ======================================================= -->
+      <!-- ======================================= -->
+      <!-- ERROR -->
+      <!-- ======================================= -->
 
-    @if (errorMessage()) {
+      @if (errorMessage()) {
 
-      <div class="error-message">
+        <div class="error-message">
 
-        <mat-icon>error_outline</mat-icon>
+          <mat-icon>
+            error_outline
+          </mat-icon>
 
-        <span>
-          {{ errorMessage() }}
-        </span>
-
-      </div>
-
-    }
-
-
-    <!-- ======================================================= -->
-    <!-- ACTIONS -->
-    <!-- ======================================================= -->
-
-    <div class="dialog-actions">
-
-      <button
-        type="button"
-        mat-button
-        class="cancel-button"
-        [disabled]="isSubmitting()"
-        (click)="cancel()"
-      >
-        {{ 'common.cancel' | translate }}
-      </button>
-
-
-      <button
-        type="submit"
-        mat-raised-button
-        class="save-button"
-        [disabled]="isSubmitting()"
-      >
-
-        
           <span>
-            {{
-              isEditing()
-                ? ('common.saveChanges' | translate)
-                : ('common.add' | translate)
-            }}
+            {{ errorMessage() | translate }}
           </span>
 
-        
+        </div>
 
-      </button>
+      }
 
-    </div>
 
-  </form>
+      <!-- ======================================= -->
+      <!-- ACTIONS -->
+      <!-- ======================================= -->
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          mat-stroked-button
+          (click)="cancel()"
+          [disabled]="isSubmitting()"
+        >
+
+          {{ 'common.cancel' | translate }}
+
+        </button>
+
+
+        <button
+          type="submit"
+          class="save-button"
+          mat-flat-button
+          [disabled]="isSubmitting()"
+        >
+
+          @if (isSubmitting()) {
+
+            <mat-spinner
+              diameter="20"
+            />
+
+          } @else {
+
+            <mat-icon>
+              save
+            </mat-icon>
+
+          }
+
+          {{
+            isEditing()
+              ? ('common.save' | translate)
+              : ('common.save' | translate)
+          }}
+
+        </button>
+
+      </div>
+
+
+    </form>
+
+  </div>
 
 </div>

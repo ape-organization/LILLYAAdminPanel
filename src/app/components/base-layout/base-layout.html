@@ -26,7 +26,7 @@
 
         <div class="mobile-brand-icon">
        
-<img src="../../../../assets/images/pinkylogo.png" />
+<img src="../../../../assets/images/lilly.png" />
 
       
         </div>
@@ -99,17 +99,15 @@
 
         <a
           mat-list-item
-          routerLink="/admin/subCategories"
+          routerLink="/admin/heelsizes"
           routerLinkActive="active"
           (click)="closeMobileDrawer(drawer)"
         >
 
-          <mat-icon matListItemIcon>
-            subject
-          </mat-icon>
-
+        
+<mat-icon matListItemIcon>height</mat-icon>
           <span matListItemTitle class="item">
-            {{ 'nav.subCategories' | translate }}
+            {{ 'nav.heelsizes' | translate }}
           </span>
 
         </a>
@@ -117,17 +115,15 @@
 
         <a
           mat-list-item
-          routerLink="/admin/brand"
+          routerLink="/admin/sizes"
           routerLinkActive="active"
           (click)="closeMobileDrawer(drawer)"
         >
 
-          <mat-icon matListItemIcon>
-            storefront
-          </mat-icon>
-
+         
+<mat-icon matListItemIcon>straighten</mat-icon>
           <span matListItemTitle class="item">
-            {{ 'nav.brands' | translate }}
+            {{ 'nav.sizes' | translate }}
           </span>
 
         </a>
@@ -283,13 +279,13 @@
 
             <span class="brand-symbol">
          
-<img src="../../../../assets/images/pinkylogo.png" />
+<img src="../../../../assets/images/lilly.png" />
 
     
             </span>
 
             <span class="brand-name">
-              {{ title() }}
+              {{ title() | translate}}
             </span>
 
           </a>

@@ -1,28 +1,24 @@
+import {
+  Component,
+  Inject,
+  OnInit,
+  inject,
+  signal
+} from '@angular/core';
 
 import {
   CommonModule
 } from '@angular/common';
 
 import {
-  Component,
-  HostListener,
-  Inject,
-  OnInit,
-  computed,
-  inject,
-  signal
-} from '@angular/core';
-
-import {
+  FormArray,
   FormBuilder,
-  FormGroup,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
 
 import {
   MAT_DIALOG_DATA,
-  MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
 
@@ -41,790 +37,340 @@ import {
 import {
   TranslatePipe
 } from '@ngx-translate/core';
-import { ProductService } from '../../../../services/product.service';
-import { BrandService } from '../../../../services/brand.service';
-import { CategoryService } from '../../../../services/category.service';
-import { SubCategoryService } from '../../../../services/sub-category.service';
-import { Product } from '../../../../models/product.model';
-import { Brand } from '../../../../models/Brand.model';
-import { Category } from '../../../../models/category.model';
-import { SubCategory } from '../../../../models/subCategory.model';
-import { environment } from '../../../../../environments/environment';
 
+import {
+  forkJoin,
+  finalize
+} from 'rxjs';
+import { ProductImageItem, ProductImagesComponent } from '../product-images.component/product-images.component';
+import { ProductVariantsComponent } from '../product-variants.component/product-variants.component';
+import { ProductService } from '../../../../services/product.service';
+import { CategoryService } from '../../../../services/category.service';
+import { SizeService } from '../../../../services/size.service';
+import { HeelSizeService } from '../../../../services/heel-size.service';
+import { Product } from '../../../../models/product.model';
+import { Category } from '../../../../models/category.model';
+import { Size } from '../../../../models/size.model';
+import { HeelSize } from '../../../../models/heel-size.model';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-add-product',
+
   standalone: true,
 
   imports: [
     CommonModule,
     ReactiveFormsModule,
 
-    MatDialogModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
 
-    TranslatePipe
+    TranslatePipe,
+
+    ProductImagesComponent,
+    ProductVariantsComponent
   ],
 
   templateUrl: './add-product.component.html',
-  styleUrl: './add-product.component.scss'
+
+  styleUrls: ['./add-product.component.scss']
 })
 export class AddProductComponent implements OnInit {
 
   private readonly fb = inject(FormBuilder);
-  private readonly productService = inject(ProductService);
-  private readonly brandService = inject(BrandService);
-  private readonly categoryService = inject(CategoryService);
-  private readonly subCategoryService = inject(SubCategoryService);
+
+  private readonly productService =
+    inject(ProductService);
+
+  private readonly categoryService =
+    inject(CategoryService);
+
+  private readonly sizeService =
+    inject(SizeService);
+
+  private readonly heelSizeService =
+    inject(HeelSizeService);
 
 
-  constructor(
-    private readonly dialogRef: MatDialogRef<AddProductComponent>,
-
-    @Inject(MAT_DIALOG_DATA)
-    public data: {
-      isEditing: boolean;
-      product?: Product;
-    }
-  ) {}
+  private readonly dialogRef =
+    inject(MatDialogRef<AddProductComponent>);
 
 
-  // =========================================================
-  // SIGNALS
-  // =========================================================
+  /* ========================================= */
+  /* DATA */
+  /* ========================================= */
 
-  readonly brands = signal<Brand[]>([]);
+  readonly product =
+    signal<Product | null>(null);
 
-  readonly categories = signal<Category[]>([]);
 
-  readonly filteredSubCategories =
-    signal<SubCategory[]>([]);
+  readonly categories =
+    signal<Category[]>([]);
 
-  readonly isLoadingSubCategories =
-    signal(false);
 
-  readonly isLoadingCategories =
-    signal(false);
+  readonly sizes =
+    signal<Size[]>([]);
 
-  readonly isLoadingBrands =
-    signal(false);
+
+  readonly heelSizes =
+    signal<HeelSize[]>([]);
+
+
+  /* ========================================= */
+  /* STATE */
+  /* ========================================= */
+
+  readonly isLoading =
+    signal(true);
+
 
   readonly isSubmitting =
     signal(false);
 
+
   readonly errorMessage =
-    signal<string | null>(null);
+    signal('');
 
-  readonly selectedFile =
-    signal<File | null>(null);
 
-  readonly imagePreview =
-    signal<string | null>(null);
-
-  readonly selectedCategoryId =
-    signal<number | null>(null);
-
-  readonly selectedSubCategoryIds =
-    signal<number[]>([]);
-
-  readonly isSubCategoryDropdownOpen =
+  readonly isEditing =
     signal(false);
 
 
-  // =========================================================
-  // COMPUTED
-  // =========================================================
+  /* ========================================= */
+  /* IMAGES */
+  /* ========================================= */
 
-  readonly isEditing = computed(
-    () => this.data?.isEditing === true
-  );
+  productImages: ProductImageItem[] = [];
 
-  readonly hasImage = computed(
-    () => !!this.imagePreview()
-  );
 
-  readonly selectedSubCategoryCount = computed(
-    () => this.selectedSubCategoryIds().length
-  );
+  /* ========================================= */
+  /* FORM */
+  /* ========================================= */
 
-  readonly discountedPrice = computed(() => {
+  readonly productForm =
+    this.fb.group({
 
-    if (!this.productForm) {
-      return 0;
+      nameEn: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(200)
+        ]
+      ],
+
+      nameAr: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(200)
+        ]
+      ],
+
+      actualPrice: [
+        0,
+        [
+          Validators.required,
+          Validators.min(0)
+        ]
+      ],
+
+      sellingPrice: [
+        0,
+        [
+          Validators.required,
+          Validators.min(0)
+        ]
+      ],
+
+      discountPercentage: [
+        0,
+        [
+          Validators.min(0),
+          Validators.max(100)
+        ]
+      ],
+
+      stockQuantity: [
+        0,
+        [
+          Validators.min(0)
+        ]
+      ],
+
+      isInStock: [
+        true,
+        Validators.required
+      ],
+
+      categoryId: [
+        null as number | null,
+        Validators.required
+      ],
+
+      descriptionEn: [
+        '',
+        Validators.maxLength(5000)
+      ],
+
+      descriptionAr: [
+        '',
+        Validators.maxLength(5000)
+      ],
+
+      variants:
+        this.fb.array([])
+
+    });
+
+
+  /* ========================================= */
+  /* VARIANTS */
+  /* ========================================= */
+
+  get variants(): FormArray {
+
+    return this.productForm.get(
+      'variants'
+    ) as FormArray;
+
+  }
+
+
+  /* ========================================= */
+  /* CONSTRUCTOR */
+  /* ========================================= */
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    data: any | null
+  ) {
+
+    if (data) {
+
+      this.product.set(data.product);
+
+      this.isEditing.set(data.isEditing);
+
     }
 
-    const price =
-      Number(
-        this.productForm.get('sellingPrice')?.value
-      ) || 0;
-
-    const discount =
-      Number(
-        this.productForm.get('discountPercentage')?.value
-      ) || 0;
-
-    const validDiscount =
-      Math.min(
-        Math.max(discount, 0),
-        100
-      );
-
-    return price -
-      (price * validDiscount / 100);
-  });
+  }
 
 
-  readonly api =
-    environment.imageBaseUrl;
-
-
-  // =========================================================
-  // FORM
-  // =========================================================
-
-  productForm!: FormGroup;
-
-
-  // =========================================================
-  // EDITING STATE
-  // =========================================================
-
-  private editingCategoryId:
-    number | null = null;
-
-  private editingSubCategoryIds:
-    number[] = [];
-
-
-  // =========================================================
-  // INIT
-  // =========================================================
+  /* ========================================= */
+  /* INIT */
+  /* ========================================= */
 
   ngOnInit(): void {
 
-    this.initializeForm();
+    this.loadLookups();
 
-    this.loadBrands();
-
-    this.loadCategories();
-
-    if (
-      this.data?.isEditing &&
-      this.data?.product
-    ) {
-      this.loadProductData(
-        this.data.product
-      );
-    }
   }
 
 
-  // =========================================================
-  // FORM INITIALIZATION
-  // =========================================================
+  /* ========================================= */
+  /* LOAD LOOKUPS */
+  /* ========================================= */
 
-  private initializeForm(): void {
+  private loadLookups(): void {
 
-    this.productForm =
-      this.fb.group({
+//    this.isLoading.set(true);
 
-        nameEn: [
-          '',
-          [
-            Validators.required
-          ]
-        ],
+    forkJoin({
 
-        nameAr: [
-          '',
-          [
-            Validators.required
-          ]
-        ], actualPrice: [
-          null,
-          [
-            Validators.required,
-            Validators.min(0)
-          ]
-        ],
-        sellingPrice: [
-          null,
-          [
-            Validators.required,
-            Validators.min(0)
-          ]
-        ],
+      categories:
+        this.categoryService.getCategories(),
 
-        discountPercentage: [
-          0,
-          [
-            Validators.min(0),
-            Validators.max(100)
-          ]
-        ],
+      sizes:
+        this.sizeService.getSizes(),
 
-        stockQuantity: [
-          null,
-          [Validators.min(0)  ]
-        ],
+      heelSizes:
+        this.heelSizeService.getHeelSizes()
 
-        isInStock: [
-          true
-        ],
-
-        brandId: [
-          null,
-          Validators.required
-        ],
-
-        categoryId: [
-          null,
-          Validators.required
-        ],
-
-        subCategoryIds: [
-          [],
-          Validators.required
-        ],
-
-        descriptionEn: [
-          ''
-        ],
-
-        descriptionAr: [
-          ''
-        ]
-
-      });
-  }
-
-
-  // =========================================================
-  // LOAD BRANDS
-  // =========================================================
-
-  private loadBrands(): void {
-
-    this.isLoadingBrands.set(true);
-
-    this.brandService
-      .getBrands()
+    })
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false);
+        })
+      )
       .subscribe({
 
-        next: (response: any) => {
+        next: ({
+          categories,
+          sizes,
+          heelSizes
+        }) => {
 
-          const brands =
-            Array.isArray(response)
-              ? response
-              : (
-                  response?.data ??
-                  response?.items ??
-                  []
-                );
-
-          this.brands.set(brands);
-
-          this.isLoadingBrands.set(false);
-        },
-
-        error: (error) => {
-
-         this.errorMessage.set(
-            'Error loading brands'
+          this.categories.set(
+            categories
           );
 
-          this.brands.set([]);
+          this.sizes.set(
+            sizes
+          );
 
-          this.isLoadingBrands.set(false);
-        }
-
-      });
-  }
-
-
-  // =========================================================
-  // LOAD CATEGORIES
-  // =========================================================
-
-  private loadCategories(): void {
-
-    this.isLoadingCategories.set(true);
-
-    this.categoryService
-      .getCategories()
-      .subscribe({
-
-        next: (response: any) => {
-
-          const categories =
-            Array.isArray(response)
-              ? response
-              : (
-                  response?.data ??
-                  response?.items ??
-                  []
-                );
-
-          this.categories.set(categories);
-
-          this.isLoadingCategories.set(false);
+          this.heelSizes.set(
+            heelSizes
+          );
 
 
-          /*
-           * If we are editing and the product
-           * already has a category, load its
-           * subcategories now.
-           */
+          if (this.isEditing()) {
 
-          if (
-            this.editingCategoryId !== null
-          ) {
-
-            this.loadSubCategories(
-              this.editingCategoryId,
-              this.editingSubCategoryIds
+            this.patchProduct(
+              this.product()!
             );
 
           }
 
         },
 
-        error: (error) => {
-
-           this.errorMessage.set(
-            'Error loading categories')
-
-          this.categories.set([]);
-
-          this.isLoadingCategories.set(false);
-        }
-
-      });
-  }
-
-
-  // =========================================================
-  // LOAD SUBCATEGORIES
-  // =========================================================
-
-  private loadSubCategories(
-    categoryId: number,
-    selectedIds: number[] = []
-  ): void {
-
-    const id = Number(categoryId);
-
-    if (
-      !id ||
-      Number.isNaN(id)
-    ) {
-
-      this.selectedCategoryId.set(null);
-
-      this.filteredSubCategories.set([]);
-
-      this.selectedSubCategoryIds.set([]);
-
-      this.productForm.patchValue({
-        subCategoryIds: []
-      });
-
-      return;
-    }
-
-
-    this.selectedCategoryId.set(id);
-
-    this.isLoadingSubCategories.set(true);
-
-
-    this.subCategoryService
-      .getByCategoryId(id)
-      .subscribe({
-
-        next: (response: any) => {
-
-          const subCategories =
-            Array.isArray(response)
-              ? response
-              : (
-                  response?.data ??
-                  response?.items ??
-                  []
-                );
-
-
-          /*
-           * Make sure only subcategories
-           * belonging to this category
-           * are displayed.
-           */
-
-          const filtered =
-            subCategories.filter(
-              (subCategory: SubCategory) =>
-                Number(
-                  subCategory.categoryId
-                ) === id
-            );
-
-
-          this.filteredSubCategories
-            .set(filtered);
-
-
-          /*
-           * Keep only IDs that actually
-           * exist in the returned list.
-           */
-
-          const validIds =
-            selectedIds
-              .map(value => Number(value))
-              .filter(
-                value =>
-                  !Number.isNaN(value)
-              )
-              .filter(
-                value =>
-                  filtered.some(
-                    (                    subCategory: { id: any; }) =>
-                      Number(
-                        subCategory.id
-                      ) === value
-                  )
-              );
-
-
-          this.selectedSubCategoryIds
-            .set(validIds);
-
-
-          this.productForm.patchValue({
-            subCategoryIds: validIds
-          });
-
-
-          this.isLoadingSubCategories
-            .set(false);
-        },
-
-        error: (error) => {
+        error: () => {
 
           this.errorMessage.set(
-            'Error loading subcategories')
+            'LOAD_DATA'
+          );
 
-          this.filteredSubCategories.set([]);
-
-          this.selectedSubCategoryIds.set([]);
-
-          this.productForm.patchValue({
-            subCategoryIds: []
-          });
-
-          this.isLoadingSubCategories
-            .set(false);
         }
 
       });
+
   }
 
 
-  // =========================================================
-  // CATEGORY CHANGE
-  // =========================================================
-
-  onCategorySelectChange(): void {
-
-    const categoryId =
-      Number(
-        this.productForm
-          .get('categoryId')
-          ?.value
-      );
-
-
-    if (
-      !categoryId ||
-      Number.isNaN(categoryId)
-    ) {
-
-      this.selectedCategoryId.set(null);
-
-      this.filteredSubCategories.set([]);
-
-      this.selectedSubCategoryIds.set([]);
-
-      this.productForm.patchValue({
-        subCategoryIds: []
-      });
-
-      return;
-    }
-
-
-    this.onCategoryChange(
-      categoryId
-    );
-  }
-
-
-  onCategoryChange(
-    categoryId: number
-  ): void {
-
-    const id = Number(categoryId);
-
-
-    if (
-      !id ||
-      Number.isNaN(id)
-    ) {
-
-      this.selectedCategoryId.set(null);
-
-      this.filteredSubCategories.set([]);
-
-      this.selectedSubCategoryIds.set([]);
-
-      this.productForm.patchValue({
-        subCategoryIds: []
-      });
-
-      return;
-    }
-
-
-    this.selectedCategoryId.set(id);
-
-    /*
-     * A new category means the previous
-     * subcategory selection is no longer valid.
-     */
-
-    this.selectedSubCategoryIds.set([]);
-
-    this.productForm.patchValue({
-      subCategoryIds: []
-    });
-
-
-    this.loadSubCategories(
-      id,
-      []
-    );
-  }
-
-
-  // =========================================================
-  // SUBCATEGORY DROPDOWN
-  // =========================================================
-
-  toggleSubCategoryDropdown(): void {
-
-    if (
-      !this.selectedCategoryId() ||
-      this.isLoadingSubCategories()
-    ) {
-      return;
-    }
-
-    this.isSubCategoryDropdownOpen.update(
-      value => !value
-    );
-  }
-
-
-  // =========================================================
-  // SUBCATEGORY CHECKBOX
-  // =========================================================
-
-  toggleSubCategory(
-    subCategoryId: number,
-    event: Event
-  ): void {
-
-    const checkbox =
-      event.target as HTMLInputElement;
-
-    const id = Number(subCategoryId);
-
-
-    if (
-      !id ||
-      Number.isNaN(id)
-    ) {
-      return;
-    }
-
-
-    const current =
-      this.selectedSubCategoryIds();
-
-
-    let updated: number[];
-
-
-    if (checkbox.checked) {
-
-      if (current.includes(id)) {
-        return;
-      }
-
-      updated = [
-        ...current,
-        id
-      ];
-
-    } else {
-
-      updated =
-        current.filter(
-          value => value !== id
-        );
-
-    }
-
-
-    this.onSubCategoryChange(
-      updated
-    );
-  }
-
-
-  // =========================================================
-  // SUBCATEGORY CHANGE
-  // =========================================================
-
-  onSubCategoryChange(
-    selectedIds: number[]
-  ): void {
-
-    const ids =
-      selectedIds
-        .map(id => Number(id))
-        .filter(
-          id =>
-            !Number.isNaN(id)
-        );
-
-
-    this.selectedSubCategoryIds
-      .set(ids);
-
-
-    this.productForm.patchValue({
-      subCategoryIds: ids
-    });
-
-
-    this.productForm
-      .get('subCategoryIds')
-      ?.markAsTouched();
-  }
-
-
-  // =========================================================
-  // REMOVE SUBCATEGORY
-  // =========================================================
-
-  removeSubCategory(
-    id: number
-  ): void {
-
-    const updated =
-      this.selectedSubCategoryIds()
-        .filter(
-          value =>
-            value !== Number(id)
-        );
-
-
-    this.onSubCategoryChange(
-      updated
-    );
-  }
-
-
-  // =========================================================
-  // LOAD PRODUCT FOR EDIT
-  // =========================================================
-
-  private loadProductData(
+  /* ========================================= */
+  /* PATCH EDIT PRODUCT */
+  /* ========================================= */
+
+  private patchProduct(
     product: Product
   ): void {
-
-    const subCategoryIds =
-      (
-        product.subCategories ?? []
-      )
-        .map(
-          (subCategory: any) =>
-            Number(subCategory.id)
-        )
-        .filter(
-          id =>
-            !Number.isNaN(id)
-        );
-
-
-    const categoryId =
-      this.getProductCategoryId(
-        product
-      );
-
-
-    const brandId =
-      product.brand?.id ??
-      (product as any).brandId ??
-      null;
-
-
-    const discount =
-      Number(
-        (product as any)
-          .discountPercentage
-      ) || 0;
-
-
-    this.editingCategoryId =
-      categoryId;
-
-    this.editingSubCategoryIds =
-      subCategoryIds;
-
 
     this.productForm.patchValue({
 
       nameEn:
-        product.nameEn ?? '',
+        product.nameEn,
 
       nameAr:
-        product.nameAr ?? '',
+        product.nameAr,
 
       actualPrice:
-        product.actualPrice ?? null,
-        sellingPrice:product.price??null,
+        product.actualPrice,
+
+      sellingPrice:
+        product.price,
 
       discountPercentage:
-        discount,
+        product.discountPercentage ?? 0,
 
       stockQuantity:
-        product.stockQuantity ?? null,
+        product.stockQuantity,
 
       isInStock:
-        (product as any).isInStock ?? true,
-
-      brandId:
-        brandId,
+        product.isInStock,
 
       categoryId:
-        categoryId,
-
-      subCategoryIds:
-        subCategoryIds,
+        product.categoryId,
 
       descriptionEn:
         product.descriptionEn ?? '',
@@ -835,487 +381,345 @@ export class AddProductComponent implements OnInit {
     });
 
 
-    this.selectedCategoryId
-      .set(categoryId);
+    /* ===================================== */
+    /* VARIANTS */
+    /* ===================================== */
+
+    this.variants.clear();
 
 
-    this.selectedSubCategoryIds
-      .set(subCategoryIds);
-
-
-    /*
-     * If categories are already loaded,
-     * load the subcategories immediately.
-     *
-     * Otherwise loadCategories() will
-     * do it when the API response arrives.
-     */
-
-    if (
-      categoryId !== null &&
-      this.categories().length > 0
+    for (
+      const variant
+      of product.variants ?? []
     ) {
 
-      this.loadSubCategories(
-        categoryId,
-        subCategoryIds
+      this.variants.push(
+
+        this.fb.group({
+
+          sizeId: [
+            variant.sizeId ?? null
+          ],
+
+          heelSizeId: [
+            variant.heelSizeId ?? null
+          ],
+
+          stockQuantity: [
+            variant.stockQuantity ?? 0,
+            [
+              Validators.required,
+              Validators.min(0)
+            ]
+          ]
+
+        })
+
       );
 
     }
 
 
-    // Image
+    /* ===================================== */
+    /* IMAGES */
+    /* ===================================== */
 
-    if (product.imageUrl) {
-
-      this.imagePreview.set(
-        this.getImageUrl(
-          product.imageUrl
+    this.productImages =
+      (product.images ?? [])
+        .sort(
+          (a, b) =>
+            a.sortOrder - b.sortOrder
         )
-      );
+        .map(image => ({
 
-    }
+          id: image.id,
+
+          imageUrl:
+            image.imageUrl,
+
+          previewUrl:
+            this.getImageUrl(
+              image.imageUrl
+            ),
+
+          sortOrder:
+            image.sortOrder,
+
+          isNew: false
+
+        }));
 
   }
 
 
-  // =========================================================
-  // GET PRODUCT CATEGORY
-  // =========================================================
+  /* ========================================= */
+  /* IMAGE URL */
+  /* ========================================= */
 
-  private getProductCategoryId(
-    product: Product
-  ): number | null {
+  private getImageUrl(
+    imageUrl?: string | null
+  ): string {
 
-    const directCategoryId =
-      (product as any)
-        ?.category?.id;
-
-
-    if (
-      directCategoryId !== null &&
-      directCategoryId !== undefined
-    ) {
-
-      const id =
-        Number(directCategoryId);
-
-      if (
-        !Number.isNaN(id)
-      ) {
-        return id;
-      }
+    if (!imageUrl) {
+      return '';
     }
 
 
-    const subCategories =
-      product.subCategories ?? [];
-
-
     if (
-      subCategories.length > 0
+      imageUrl.startsWith('http://') ||
+      imageUrl.startsWith('https://')
     ) {
 
-      const categoryId =
-        (subCategories[0] as any)
-          ?.categoryId;
+      return imageUrl;
 
-
-      if (
-        categoryId !== null &&
-        categoryId !== undefined
-      ) {
-
-        const id =
-          Number(categoryId);
-
-        if (
-          !Number.isNaN(id)
-        ) {
-          return id;
-        }
-      }
     }
 
 
-    return null;
+    const baseUrl =
+      environment.imageBaseUrl;
+
+
+    return `${baseUrl}${imageUrl}`;
+
   }
 
 
-  // =========================================================
-  // FILE SELECT
-  // =========================================================
+  /* ========================================= */
+  /* IMAGE CHANGE */
+  /* ========================================= */
 
-  onFileSelected(
-    event: Event
+  onImagesChange(
+    images: ProductImageItem[]
   ): void {
 
-    const input =
-      event.target as HTMLInputElement;
+    this.productImages =
+      images;
+
+  }
 
 
-    if (
-      !input.files ||
-      input.files.length === 0
-    ) {
-      return;
-    }
+  /* ========================================= */
+  /* PRICE AFTER DISCOUNT */
+  /* ========================================= */
+
+  getPriceAfterDiscount(): number {
+
+    const price =
+      Number(
+        this.productForm.get(
+          'sellingPrice'
+        )?.value
+      ) || 0;
 
 
-    const file =
-      input.files[0];
+    const discount =
+      Number(
+        this.productForm.get(
+          'discountPercentage'
+        )?.value
+      ) || 0;
 
 
-    const allowedTypes = [
-      'image/png',
-      'image/jpeg',
-      'image/webp'
-    ];
-
-
-    if (
-      !allowedTypes.includes(
-        file.type
-      )
-    ) {
-
-      this.errorMessage.set(
-        'Only PNG, JPG, JPEG and WEBP images are allowed.'
+    return price -
+      (
+        price *
+        discount /
+        100
       );
 
-      input.value = '';
-
-      return;
-    }
+  }
 
 
-    const maxSize =
-      5 * 1024 * 1024;
+  /* ========================================= */
+  /* PRICE VALIDATION */
+  /* ========================================= */
+
+  private validatePrice(): boolean {
+
+    const actualPrice =
+      Number(
+        this.productForm.get(
+          'actualPrice'
+        )?.value
+      ) || 0;
 
 
-    if (
-      file.size > maxSize
-    ) {
+    const sellingPrice =
+      Number(
+        this.productForm.get(
+          'sellingPrice'
+        )?.value
+      ) || 0;
 
-      this.errorMessage.set(
-        'Image size must not exceed 5MB.'
+
+    const discount =
+      Number(
+        this.productForm.get(
+          'discountPercentage'
+        )?.value
+      ) || 0;
+
+
+    const finalPrice =
+      sellingPrice -
+      (
+        sellingPrice *
+        discount /
+        100
       );
 
-      input.value = '';
 
-      return;
+    if (finalPrice < actualPrice) {
+
+      this.errorMessage.set(
+        'PRICE_BELOW_ACTUAL'
+      );
+
+      return false;
+
     }
 
 
-    this.errorMessage.set(null);
+    return true;
 
-    this.selectedFile.set(file);
-
-
-    const reader =
-      new FileReader();
+  }
 
 
-    reader.onload =
-      () => {
+  /* ========================================= */
+  /* VARIANT VALIDATION */
+  /* ========================================= */
 
-        this.imagePreview.set(
-          reader.result as string
+  private validateVariants(): boolean {
+
+    const combinations =
+      new Set<string>();
+
+
+    for (
+      const variant
+      of this.variants.controls
+    ) {
+
+      const sizeId =
+        variant.get(
+          'sizeId'
+        )?.value ?? null;
+
+
+      const heelSizeId =
+        variant.get(
+          'heelSizeId'
+        )?.value ?? null;
+
+
+      /* =================================== */
+      /* AT LEAST ONE */
+      /* =================================== */
+
+      if (
+        sizeId === null &&
+        heelSizeId === null
+      ) {
+
+        this.errorMessage.set(
+          'VARIANT_SELECTION'
         );
 
-      };
+        variant.markAllAsTouched();
+
+        return false;
+
+      }
 
 
-    reader.readAsDataURL(file);
-  }
-//===========================================
-// close sub category list 
-//===========================================
-@HostListener('document:click', ['$event'])
-onDocumentClick(event: MouseEvent): void {
+      /* =================================== */
+      /* DUPLICATE */
+      /* =================================== */
 
-  const target =
-    event.target as HTMLElement;
-
-  const dropdown =
-    target.closest('.subcategory-dropdown');
-
-  if (!dropdown) {
-
-    this.isSubCategoryDropdownOpen.set(false);
-
-  }
-
-}
-//==========================================
-// show the discounted price
-//==========================================
-getPriceAfterDiscount(): number | null {
-
-  const sellingPrice =
-    Number(
-      this.productForm.get('sellingPrice')?.value ?? 0
-    );
-
-  const discount =
-    Number(
-      this.productForm.get('discountPercentage')?.value ?? 0
-    );
-
-  if (
-    sellingPrice <= 0 ||
-    discount <= 0
-  ) {
-    return null;
-  }
-
-  return (
-    sellingPrice -
-    (sellingPrice * discount / 100)
-  );
-}
-  // =========================================================
-  // SAVE
-  // =========================================================
-
-  save(): void {
-
-    this.errorMessage.set(null);
+      const key =
+        `${sizeId ?? ''}_${heelSizeId ?? ''}`;
 
 
-    if (
-      this.productForm.invalid
-    ) {
+      if (
+        combinations.has(key)
+      ) {
 
-      this.productForm.markAllAsTouched();
+        this.errorMessage.set(
+          'DUPLICATE_VARIANT'
+        );
 
-      return;
+        return false;
+
+      }
+
+
+      combinations.add(key);
+
     }
 
 
-    const productNameEn = String( this.productForm .get('nameEn') ?.value ?? '' ).trim();
-const productNameAr = String(this.productForm .get('nameAr')?.value ?? '').trim();
-const actualPrice =Number(
-    this.productForm.get('actualPrice')?.value ?? 0
-  );
+    return true;
 
-const sellingPrice =
-  Number(
-    this.productForm.get('sellingPrice')?.value ?? 0
-  );
-
-const discount =
-  Number(
-    this.productForm.get('discountPercentage')?.value ?? 0
-  );
-
-    if (
-      !productNameEn &&
-      !productNameAr
-    ) {
-
-      this.errorMessage.set(
-        'Product name is required.'
-      );
-
-      return;
-    }
- const discountedPrice = sellingPrice - (sellingPrice * discount / 100);
-console.log(actualPrice > discountedPrice)
-if (actualPrice > discountedPrice) {
-
-  this.errorMessage.set(
-    'Actual price must be less than the selling price after discount.'
-  );
-
-  return;
-}
-
-    this.isSubmitting.set(true);
-
-
-    this.productService
-      .checkProductExists(
-        productNameEn
-      )
-      .subscribe({
-
-        next: (exists: boolean) => {
-console.log(exists)
-console.log(this.isEditing())
-          if (!exists  ) {
-console.log("inside")
-            this.errorMessage.set(
-              'A product with this name already exists.'
-            );
-
-            this.isSubmitting.set(false);
-
-            return;
-          }
-
-
-          if (this.isEditing()) {
-
-            this.updateProduct();
-
-          } else {
-
-            this.createProduct();
-
-          }
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage.set(
-            'Error checking product')
-
-          if (this.isEditing()) {
-
-            this.updateProduct();
-
-          } else {
-
-            this.createProduct();
-
-          }
-
-        }
-
-      });
   }
 
 
-  // =========================================================
-  // CREATE
-  // =========================================================
-
-  private createProduct(): void {
-
-    const formData =
-      this.buildFormData();
-
-
-    this.productService
-      .createProduct(formData)
-      .subscribe({
-
-        next: (response) => {
-
-          this.isSubmitting.set(false);
-
-          this.dialogRef.close(
-            response ?? true
-          );
-
-        },
-
-        error: (error) => {
-
-          this.errorMessage.set(
-            'Error creating product')
-
-        
-
-          this.isSubmitting.set(false);
-        }
-
-      });
-  }
-
-
-  // =========================================================
-  // UPDATE
-  // =========================================================
-
-  private updateProduct(): void {
-
-    const productId =
-      this.data?.product?.id;
-
-
-    if (!productId) {
-
-      this.errorMessage.set(
-        'Product ID is missing.'
-      );
-
-      this.isSubmitting.set(false);
-
-      return;
-    }
-
-
-    const formData =
-      this.buildFormData();
-
-
-    this.productService
-      .updateProduct(
-        productId,
-        formData
-      )
-      .subscribe({
-
-        next: (response) => {
-
-          this.isSubmitting.set(false);
-
-          this.dialogRef.close(
-            response ?? true
-          );
-
-        },
-
-        error: (error) => {
-
-           this.errorMessage.set(
-            'Error updating product')
-
-
-          this.isSubmitting.set(false);
-        }
-
-      });
-  }
-
-
-  // =========================================================
-  // BUILD FORM DATA
-  // =========================================================
+  /* ========================================= */
+  /* BUILD FORM DATA */
+  /* ========================================= */
 
   private buildFormData(): FormData {
-
-    const value =
-      this.productForm.getRawValue();
-
 
     const formData =
       new FormData();
 
 
+    const value =
+      this.productForm.getRawValue();
+
+
+    /* ===================================== */
+    /* BASIC DATA */
+    /* ===================================== */
+
     formData.append(
       'NameEn',
-      String(value.nameEn ?? '').trim()
+      value.nameEn?.trim() ?? ''
     );
 
 
     formData.append(
       'NameAr',
-      String(value.nameAr ?? '').trim()
+      value.nameAr?.trim() ?? ''
+    );
+
+
+    formData.append(
+      'DescriptionEn',
+      value.descriptionEn?.trim() ?? ''
+    );
+
+
+    formData.append(
+      'DescriptionAr',
+      value.descriptionAr?.trim() ?? ''
     );
 
 
     formData.append(
       'Price',
-      String(value.sellingPrice ?? 0)
+      String(
+        value.sellingPrice ?? 0
+      )
     );
- formData.append(
-      'actualPrice',
-      String(value.actualPrice ?? 0)
+
+
+    formData.append(
+      'ActualPrice',
+      String(
+        value.actualPrice ?? 0
+      )
     );
+
 
     formData.append(
       'DiscountPercentage',
@@ -1336,15 +740,7 @@ console.log("inside")
     formData.append(
       'IsInStock',
       String(
-        value.isInStock ?? false
-      )
-    );
-
-
-    formData.append(
-      'BrandId',
-      String(
-        value.brandId ?? ''
+        value.isInStock ?? true
       )
     );
 
@@ -1357,128 +753,286 @@ console.log("inside")
     );
 
 
-    /*
-     * IMPORTANT:
-     *
-     * Send each selected subcategory
-     * as a separate SubCategoryIds value.
-     */
+    /* ===================================== */
+    /* VARIANTS */
+    /* ===================================== */
 
-    const subCategoryIds =
-      this.selectedSubCategoryIds();
+    const variants =
+      value.variants ?? [];
 
 
-    subCategoryIds.forEach(
-      id => {
+    variants.forEach(
+      (variant: any, index: number) => {
+
+        if (
+          variant.sizeId !== null &&
+          variant.sizeId !== undefined
+        ) {
+
+          formData.append(
+            `Variants[${index}].SizeId`,
+            String(
+              variant.sizeId
+            )
+          );
+
+        }
+
+
+        if (
+          variant.heelSizeId !== null &&
+          variant.heelSizeId !== undefined
+        ) {
+
+          formData.append(
+            `Variants[${index}].HeelSizeId`,
+            String(
+              variant.heelSizeId
+            )
+          );
+
+        }
+
 
         formData.append(
-          'SubCategoryIds',
-          String(id)
+          `Variants[${index}].StockQuantity`,
+          String(
+            variant.stockQuantity ?? 0
+          )
         );
 
       }
     );
 
 
-    formData.append(
-      'DescriptionEn',
-      String(
-        value.descriptionEn ?? ''
-      )
-    );
+    /* ===================================== */
+    /* IMAGES */
+    /* ===================================== */
+
+    this.productImages.forEach(
+      (image, index) => {
+
+        /*
+         * Existing image ID
+         */
+        if (image.id) {
+
+          formData.append(
+            `Images[${index}].Id`,
+            String(image.id)
+          );
+
+        }
 
 
-    formData.append(
-      'DescriptionAr',
-      String(
-        value.descriptionAr ?? ''
-      )
-    );
+        /*
+         * Existing image URL
+         */
+        if (image.imageUrl) {
+
+          formData.append(
+            `Images[${index}].ImageUrl`,
+            image.imageUrl
+          );
+
+        }
 
 
-    if (
-      this.selectedFile()
-    ) {
-
-      formData.append(
-        'Image',
-        this.selectedFile()!
-      );
-
-    }
-
-
-    return formData;
-  }
-
-
-  
-  // =========================================================
-  // SUBCATEGORY NAME
-  // =========================================================
-
-  getSubCategoryName(
-    id: number
-  ): string {
-
-    const subCategory =
-      this.filteredSubCategories()
-        .find(
-          item =>
-            Number(item.id) ===
-            Number(id)
+        /*
+         * Always send the current order
+         */
+        formData.append(
+          `Images[${index}].SortOrder`,
+          String(index)
         );
 
 
-    if (!subCategory) {
-      return String(id);
-    }
+        /*
+         * New uploaded image
+         */
+        if (image.file) {
+
+          formData.append(
+            `Images[${index}].Image`,
+            image.file
+          );
+
+        }
+
+      }
+    );
 
 
-    return `${subCategory.nameEn} - ${subCategory.nameAr}`;
+    return formData;
+
   }
 
 
-  // =========================================================
-  // IMAGE URL
-  // =========================================================
+  /* ========================================= */
+  /* SAVE */
+  /* ========================================= */
 
-  getImageUrl(
-    imageUrl: string
-  ): string {
+  save(): void {
+console.log("save")
+    this.errorMessage.set('');
 
+
+    /* ===================================== */
+    /* FORM VALIDATION */
+    /* ===================================== */
+console.log(this.productForm.invalid)
     if (
-      !imageUrl
+      this.productForm.invalid
     ) {
-      return '';
+
+      this.productForm.markAllAsTouched();
+
+      this.errorMessage.set(
+        'INVALID_FORM'
+      );
+
+      return;
+
     }
 
 
+    /* ===================================== */
+    /* PRICE */
+    /* ===================================== */
+
     if (
-      imageUrl.startsWith('http://') ||
-      imageUrl.startsWith('https://')
+      !this.validatePrice()
     ) {
-      return imageUrl;
+
+      return;
+
     }
 
 
-    return `${this.api}${imageUrl}`;
+    /* ===================================== */
+    /* VARIANTS */
+    /* ===================================== */
+
+    if (
+      !this.validateVariants()
+    ) {
+
+      return;
+
+    }
+
+
+    /* ===================================== */
+    /* SUBMIT */
+    /* ===================================== */
+
+    this.isSubmitting.set(true);
+
+
+    const formData =
+      this.buildFormData();
+
+console.log(this.isEditing())
+console.log(this.product()!.id)
+    if (this.isEditing()) {
+
+  console.log('CALLING UPDATE PRODUCT');
+
+  this.productService
+    .updateProduct(
+      this.product()!.id,
+      formData
+    )
+    .subscribe({
+
+      next: () => {
+
+        console.log('UPDATE SUCCESS');
+
+        this.isSubmitting.set(false);
+
+        this.dialogRef.close(true);
+
+      },
+
+      error: (error) => {
+
+        console.error('UPDATE ERROR:', error);
+
+        this.isSubmitting.set(false);
+
+        if (error.status === 409) {
+
+          this.errorMessage.set(
+            'PRODUCT WITH SAME ALREADY EXISTS'
+          );
+
+        } else {
+
+          this.errorMessage.set(
+            'PRODUCT SAVE FAILED'
+          );
+
+        }
+
+      }
+
+    });
+
+} else {
+
+  console.log('CALLING CREATE PRODUCT');
+
+  this.productService
+    .createProduct(formData)
+    .subscribe({
+
+      next: () => {
+
+        console.log('CREATE SUCCESS');
+
+        this.isSubmitting.set(false);
+
+        this.dialogRef.close(true);
+
+      },
+
+      error: (error) => {
+
+        console.error('CREATE ERROR:', error);
+
+        this.isSubmitting.set(false);
+if (error.status === 409) {
+
+          this.errorMessage.set(
+            'PRODUCT WITH SAME ALREADY EXISTS'
+          );
+
+        } else {
+
+          this.errorMessage.set(
+            'PRODUCT SAVE FAILED'
+          );
+
+        }
+
+      }
+
+    });
+
+}
+
   }
 
 
-  // =========================================================
-  // CANCEL
-  // =========================================================
+  /* ========================================= */
+  /* CANCEL */
+  /* ========================================= */
 
   cancel(): void {
 
-    if (
-      this.isSubmitting()
-    ) {
-      return;
-    }
-
     this.dialogRef.close();
+
   }
 
 }

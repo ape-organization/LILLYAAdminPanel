@@ -1,0 +1,266 @@
+<div class="management-page">
+
+  <!-- ===================================================== -->
+  <!-- HEADER -->
+  <!-- ===================================================== -->
+
+  <div class="page-header">
+
+    <div class="header-content">
+
+      <div class="header-icon">
+
+        <mat-icon>
+          straighten
+        </mat-icon>
+
+      </div>
+
+
+      <div>
+
+        <h1>
+          {{ 'SIZES.TITLE' | translate }}
+        </h1>
+
+
+        <p>
+          {{ 'SIZES.SUBTITLE' | translate }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="add-btn"
+      (click)="openAddModal()">
+
+      <mat-icon>
+        add
+      </mat-icon>
+
+
+      <span>
+        {{ 'SIZES.ADD' | translate }}
+      </span>
+
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- SEARCH -->
+  <!-- ===================================================== -->
+
+  <div class="search-box">
+
+    <mat-icon>
+      search
+    </mat-icon>
+
+
+    <input
+      type="text"
+      [value]="searchTerm()"
+      (input)="onSearch($any($event.target).value)"
+      [placeholder]="'SIZES.SEARCH' | translate"
+    />
+
+
+    @if (searchTerm()) {
+
+      <button
+        type="button"
+        class="clear-search"
+        (click)="clearSearch()">
+
+        <mat-icon>
+          close
+        </mat-icon>
+
+      </button>
+
+    }
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- LOADING -->
+  <!-- ===================================================== -->
+
+  @if (loading()) {
+
+    <div class="loading-container">
+
+      <mat-spinner
+        diameter="40">
+      </mat-spinner>
+
+    </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- EMPTY -->
+  <!-- ===================================================== -->
+
+  @else if (filteredSizes().length === 0) {
+
+    <div class="empty-state">
+
+      <div class="empty-icon">
+
+        <mat-icon>
+          straighten
+        </mat-icon>
+
+      </div>
+
+
+      <h3>
+        {{ 'SIZES.NO_SIZES' | translate }}
+      </h3>
+
+
+      <p>
+        {{ 'SIZES.NO_SIZES_DESCRIPTION' | translate }}
+      </p>
+
+
+      @if (!searchTerm()) {
+
+        <button
+          type="button"
+          class="empty-add-btn"
+          (click)="openAddModal()">
+
+          <mat-icon>
+            add
+          </mat-icon>
+
+          {{ 'SIZES.ADD' | translate }}
+
+        </button>
+
+      }
+
+    </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- LIST -->
+  <!-- ===================================================== -->
+
+  @else {
+
+    <div class="items-card">
+
+      <div class="card-header">
+
+        <div>
+
+          <h2>
+            {{ 'SIZES.LIST_TITLE' | translate }}
+          </h2>
+
+
+          <span class="count">
+            {{ filteredSizes().length }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="items-list">
+
+        @for (
+          size of filteredSizes();
+          track size.id
+        ) {
+
+          <div class="item-row">
+
+            <div class="item-info">
+
+              <div class="item-icon">
+
+                <mat-icon>
+                  straighten
+                </mat-icon>
+
+              </div>
+
+
+              <div class="item-name">
+                {{ size.name }}
+              </div>
+
+            </div>
+
+
+            <div class="item-actions">
+
+              <!-- EDIT -->
+
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                (click)="openEditModal(size)">
+
+                <mat-icon>
+                  edit
+                </mat-icon>
+
+              </button>
+
+
+              <!-- DELETE -->
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                [disabled]="deletingId() === size.id"
+                (click)="deleteSize(size)">
+
+                @if (
+                  deletingId() === size.id
+                ) {
+
+                  <mat-spinner
+                    diameter="18">
+                  </mat-spinner>
+
+                }
+                @else {
+
+                  <mat-icon>
+                    delete
+                  </mat-icon>
+
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  }
+
+</div>
