@@ -35,8 +35,6 @@
   "common": {
     "saveChanges":"Save Changes",
       "allCategories": "All Categories",
-    "allSubCategories": "All Subcategories",
-    "allBrands": "All Brands",
     "clearFilters": "Clear Filters",
     "cosmetics": "LILLY",
     "login": "LOGIN",
@@ -68,8 +66,6 @@
     "home": "Home",
     "products": "Products",
     "categories": "Categories",
-    "subCategories": "Sub Categories",
-    "brands": "Brands",
 "slider":"Slider",
     "users": "Users",
     "orders": "Orders",
@@ -107,44 +103,10 @@
     "failedToLoad": "Failed to load dashboard statistics."
   },
 
-  "brands": {
-    "management": "BRAND MANAGEMENT",
-    "description": "Manage your cosmetic brands",
 
-    "addBrand": "Add Brand",
-    "addNewBrand": "Add New Brand",
-    "editBrand": "Edit Brand",
-
-    "createDescription": "Create a new cosmetic brand",
-    "updateDescription": "Update brand information",
-
-    "brand": "Brand",
-    "chooseImage": "Choose Image",
-    "changeImage": "Change Image",
-
-"nameEn":"English name ",
-"nameEnPlaceholder":"Enter english brand name",
-"nameEnRequired":"Brand english name is required",
-    "enterBrandName": "Enter brand name",
-    "nameAr":"Arabic name",
-    "nameArPlaceholder":"Enter arabic brand name",
-"nameArRequired":"Brand english name is required",
-
-    "brandImage": "Brand image",
-
-    "brandNameRequired": "Brand name is required",
-
-    "createBrand": "CREATE BRAND",
-    "updateBrand": "UPDATE BRAND",
-
-      "invalidImage": "Please select a valid image file.",
-    "imageTooLarge": "Image size must be less than 5 MB.",
-    "saveError": "Something went wrong while saving the brand.",
-     "deleteConfirmation": "Are you sure you want to delete this brand? deleting brand means deleting all products under it."
-  },  
 
   "categories": {
-         "deleteConfirmation": "Are you sure you want to delete this category? deleting category means deleting all subcategories and products under it."
+         "deleteConfirmation": "Are you sure you want to delete this category? deleting category means deleting all products under it."
 
 ,    "management": "Category Management",
     "description": "Manage your product categories",
@@ -152,7 +114,6 @@
 "nameEn":"English name ",
 "nameEnPlaceholder":"Enter english  name",
 "nameEnRequired":"English name is required",
-    "enterBrandName": "Enter brand name",
     "nameAr":"Arabic name",
     "nameArPlaceholder":"Enter arabic  name",
 "nameArRequired":" Arabic name is required",
@@ -178,39 +139,10 @@
     "nameRequired": "Name is required"
   },
 
-  "subCategories": {
-             "deleteConfirmation": "Are you sure you want to delete this sub category? deleting sub category means deleting all  products under it."
-,
-"nameEn":"English name ",
-"nameEnPlaceholder":"Enter english  name",
-"nameEnRequired":"English name is required",
-    "enterBrandName": "Enter brand name",
-    "nameAr":"Arabic name",
-    "nameArPlaceholder":"Enter arabic  name",
-"nameArRequired":" Arabic name is required",
-
-
-    "management": "Subcategory Management",
-    "description": "Manage your store subcategories",
-
-    "addSubcategory": "Add Subcategory",
-    "editSubcategory": "Edit Subcategory",
-
-    "subcategory": "Subcategory",
-    "category": "Category",
-
-    "selectCategory": "Category",
-    "enterSubcategoryName": "Enter subcategory name",
-"enterName":"Enter name",
-    "noCategories": "No categories available.",
-
-    "categoryRequired": "Please select a category.",
-    "nameRequired": "Subcategory name is required.",
-    "minLength": "Name must contain at least 2 characters.",
-    "maxLength": "Name cannot exceed 100 characters."
-  },
+  
 
   "products": {
+    "noVariants":"______",
 "VARIANTS": {
 "TITLE": "Product Variants",
 "SUBTITLE": "Manage sizes, heel sizes, and stock for this product",
@@ -325,21 +257,17 @@
 "category":"Category",
 "descriptionPlaceholderEn":"English description",
 "descriptionPlaceholderAr":"Arabic description",
-"multipleSubcategoriesHint":"Multiple Subcategories Hint",
     "loading": "Loading products...",
     "noProducts": "No Products Found",
     "noProductsMatch": "No products match your search.",
     "startAdding": "Start by adding your first product.",
 
     "product": "Product",
-    "brand": "Brand",
     "price": "Price",
     "discount": "Discount",
     "stock": "Stock",
     "classification": "Classification",
     "actions": "Actions",
-"selectSubCategories":"select SubCategories",
-    "noBrand": "No Brand",
     "noClassification": "No classification",
 "priceAfterDiscount":"price After Discount",
     "inStock": "In Stock",
@@ -379,28 +307,18 @@
     "productUnavailable": "Product is currently unavailable",
 
     "classificationTitle": "Product Classification",
-    "classificationDescription": "Select the brand, category and subcategories",
+    "classificationDescription": "Select the  category",
 
-    "selectBrand": "Brand",
-    "loadingBrands": "Loading brands...",
-    "noBrands": "No brands available.",
-    "brandRequired": "Please select a brand.",
+
 
     "selectCategory": "Category",
     "loadingCategories": "Loading categories...",
     "noCategories": "No categories available.",
     "categoryRequired": "Please select a category.",
 
-    "subcategories": "Subcategories",
-    "subcategory": "subcategory",
-    "subcategoriesPlural": "subcategories",
-    "loadingSubcategories": "Loading subcategories...",
-    "noSubcategories": "No subcategories available.",
+
     "selectCategoryFirst": "Select a category first.",
-    "multipleSubcategories": "You can select multiple subcategories.",
-    "subcategoryRequired": "Select at least one subcategory.",
-"noSubcategoriesAvailable":"No Subcategories Available",
-    "selectedSubcategories": "SELECTED SUBCATEGORIES",
+
 
     "descriptionTitle": "Description",
     "descriptionSubtitle": "Add information about your product",

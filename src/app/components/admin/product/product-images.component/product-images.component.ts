@@ -24,6 +24,7 @@ import {
 } from '@angular/material/button';
 import { ProductImage } from '../../../../models/product.model';
 import { TranslatePipe } from '@ngx-translate/core';
+import { environment } from '../../../../../environments/environment';
 
 
 
@@ -97,7 +98,24 @@ export class ProductImagesComponent {
 
 
   images: ProductImageItem[] = [];
+getImage(url: string | null | undefined): string {
 
+  if (!url) {
+    return '';
+  }
+
+  // Existing API images
+  if (
+    url.startsWith('http://') ||
+    url.startsWith('https://') ||
+    url.startsWith('blob:')
+  ) {
+    return url;
+  }
+
+  // Relative API image path
+  return `${environment.imageBaseUrl}${url}`;
+}
 
   onFilesSelected(event: Event): void {
 

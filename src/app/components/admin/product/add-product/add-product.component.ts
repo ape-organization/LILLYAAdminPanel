@@ -735,7 +735,10 @@ export class AddProductComponent implements OnInit {
         value.stockQuantity ?? 0
       )
     );
-
+    console.log("___________________")
+console.log(value.isInStock)
+console.log( value.isInStock ?? true)
+    console.log("___________________")
 
     formData.append(
       'IsInStock',
@@ -937,7 +940,7 @@ console.log(this.product()!.id)
     if (this.isEditing()) {
 
   console.log('CALLING UPDATE PRODUCT');
-
+console.log(formData)
   this.productService
     .updateProduct(
       this.product()!.id,
