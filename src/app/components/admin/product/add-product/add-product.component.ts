@@ -936,7 +936,7 @@ console.log(this.productForm.invalid)
       this.buildFormData();
 
 console.log(this.isEditing())
-console.log(this.product()!.id)
+//console.log(this.product()!.id)
     if (this.isEditing()) {
 
   console.log('CALLING UPDATE PRODUCT');
