@@ -568,7 +568,9 @@ export class AddProductComponent implements OnInit {
         100
       );
 
-
+console.log(finalPrice)
+console.log(actualPrice)
+console.log(finalPrice < actualPrice)
     if (finalPrice < actualPrice) {
 
       this.errorMessage.set(
