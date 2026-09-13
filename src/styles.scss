@@ -47,73 +47,87 @@
     0 18px 45px rgba(58, 39, 33, 0.16);
  */
 :root {
+/* ==========================================================
+   BRAND COLORS
+   ========================================================== */
 
-  /* ==========================================================
-     BRAND COLORS
-     ========================================================== */
+/* Main dark brand color */
+--color-primary: #3A2A20;
 
-  /* Main dark brand color */
-  --color-primary: #5b0d12;
-  --color-primary-light: #3A3335;
-  --color-primary-dark: #151213;
+/* Warm brown for hover / secondary elements */
+--color-primary-light: #5A4333;
 
-  /* Baby Rose — signature accent only */
-  --color-accent: #E8B6C1;
-  --color-accent-light: #F7E6EA;
+/* Deep luxury brown */
+--color-primary-dark: #241812;
 
-  /* Sale — slightly deeper rose */
-  --color-sale: #D98C9B;
+/* Champagne Gold — signature accent */
+--color-accent: #C9A35E;
 
+/* Soft Champagne */
+--color-accent-light: #F3E8CF;
 
-  /* ==========================================================
-     BACKGROUNDS
-     ========================================================== */
-
-  --color-background: #FFFFFF;
-  --color-surface: #FFFFFF;
-  --color-surface-soft: #FAF7F8;
+/* Sale — warm muted gold/brown */
+--color-sale: #B8873E;
 
 
-  /* ==========================================================
-     TEXT
-     ========================================================== */
+/* ==========================================================
+   BACKGROUNDS
+   ========================================================== */
 
-  --color-text: #211C1E;
-  --color-text-secondary: #6E6769;
-  --color-text-light: #A49D9F;
+--color-background: #FFFCF7;
 
-  --color-footer: #f4e0e4;
+--color-surface: #FFFFFF;
 
-
-  /* ==========================================================
-     BORDERS
-     ========================================================== */
-
-  --color-border: #E8E4E5;
-  --color-border-light: #F2EFF0;
+--color-surface-soft: #F8F3EA;
 
 
-  /* ==========================================================
-     STATUS
-     ========================================================== */
+/* ==========================================================
+   TEXT
+   ========================================================== */
 
-  --color-success: #63806D;
-  --color-error: #C96F80;
-  --color-warning: #B18A5D;
+--color-text: #2B211C;
+
+--color-text-secondary: #6F6258;
+
+--color-text-light: #A79A8D;
+
+--color-footer: #EDE1CF;
 
 
-  /* ==========================================================
-     SHADOWS
-     ========================================================== */
+/* ==========================================================
+   BORDERS
+   ========================================================== */
 
-  --shadow-sm:
-    0 2px 8px rgba(33, 28, 30, 0.06);
+--color-border: #E6DCCB;
 
-  --shadow-md:
-    0 8px 25px rgba(33, 28, 30, 0.10);
+--color-border-light: #F1EBE1;
 
-  --shadow-lg:
-    0 18px 45px rgba(33, 28, 30, 0.14);
+
+/* ==========================================================
+   STATUS
+   ========================================================== */
+
+--color-success: #64806A;
+
+--color-error: #B85C4F;
+
+--color-warning: #B8873E;
+
+
+/* ==========================================================
+   SHADOWS
+   ========================================================== */
+
+--shadow-sm:
+  0 2px 8px rgba(58, 42, 32, 0.07);
+
+--shadow-md:
+  0 8px 25px rgba(58, 42, 32, 0.11);
+
+--shadow-lg:
+  0 18px 45px rgba(58, 42, 32, 0.15);
+ 
+ 
 
   --radius-sm: 6px;
   --radius-md: 10px;

@@ -13,6 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { OrderService } from '../../../services/order.service';
 import { LanguageService } from '../../../services/language.service';
+import { WebsiteVisitService } from '../../../services/website-visit.service';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class AdminDashboardComponent implements OnInit {
 
   private readonly orderService =
     inject(OrderService);
-
+  private readonly visitorService =
+    inject(WebsiteVisitService);
 
   // ============================================================
   // CURRENT DATE
@@ -65,6 +67,7 @@ export class AdminDashboardComponent implements OnInit {
   // ============================================================
   // TOTAL VALUES
   // ============================================================
+visitors=signal(0);
 
   totalOrders =
     signal(0);
@@ -156,6 +159,23 @@ export class AdminDashboardComponent implements OnInit {
       requestCompleted();
     }
   });
+ this.visitorService.getMonthlyVisitors().subscribe({
+    next: (res:any) => {
+      console.log(res)
+      this.visitors.set(res.visitors);
+
+      requestCompleted();
+    },
+
+    error: () => {
+      this.errorMessage.set(
+        'Failed to load total visitors.'
+      );
+
+      requestCompleted();
+    }
+  });
+
 }
 // transalte month 
 private readonly languageService=inject(LanguageService)

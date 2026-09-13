@@ -98,7 +98,8 @@ export class ProductVariantsComponent {
   /**
    * Create a variant form group.
    */
-  private createVariant(): FormGroup {
+
+/*   private createVariant(): FormGroup {
 
     return this.fb.group(
       {
@@ -124,8 +125,34 @@ export class ProductVariantsComponent {
       }
     );
 
-  }
+  } */
+private createVariant(): FormGroup {
+  return this.fb.group(
+    {
+      // null = new variant
+      id: [null],
 
+      sizeId: [
+        null
+      ],
+
+      heelSizeId: [
+        null
+      ],
+
+      stockQuantity: [
+        0,
+        [
+          Validators.required,
+          Validators.min(0)
+        ]
+      ]
+    },
+    {
+      validators: this.variantSelectionValidator
+    }
+  );
+}
 
   /**
    * A variant must have at least

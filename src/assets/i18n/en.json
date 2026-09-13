@@ -36,7 +36,7 @@
     "saveChanges":"Save Changes",
       "allCategories": "All Categories",
     "clearFilters": "Clear Filters",
-    "cosmetics": "LILLY",
+    "cosmetics": "LILY",
     "login": "LOGIN",
     "logout": "LOGOUT",
     "admin": "ADMIN",
@@ -79,6 +79,11 @@
     "title": "Dashboard",
     "monthlyPerformance": "Monthly Performance",
     "totalPerformance": "Total Performance",
+
+    "monthlyVisitors": "Monthly Visitors",
+    "count":"Count",
+    "totalVisitorsMonthly":"Total monthly Visitors ",
+
     "currentMonth": "Current Month",
     "allTime": "All Time",
 "monthly":"monthly",
@@ -142,6 +147,7 @@
   
 
   "products": {
+    "noCategory":"____",
     "noVariants":"______",
 "VARIANTS": {
 "TITLE": "Product Variants",

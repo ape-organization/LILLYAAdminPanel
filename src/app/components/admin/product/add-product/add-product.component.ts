@@ -388,7 +388,7 @@ export class AddProductComponent implements OnInit {
     this.variants.clear();
 
 
-    for (
+   /*  for (
       const variant
       of product.variants ?? []
     ) {
@@ -417,8 +417,30 @@ export class AddProductComponent implements OnInit {
 
       );
 
-    }
+    } */
+for (const variant of product.variants ?? []) {
+  this.variants.push(
+    this.fb.group({
+      id: [variant.id ?? null],
 
+      sizeId: [
+        variant.sizeId ?? null
+      ],
+
+      heelSizeId: [
+        variant.heelSizeId ?? null
+      ],
+
+      stockQuantity: [
+        variant.stockQuantity ?? 0,
+        [
+          Validators.required,
+          Validators.min(0)
+        ]
+      ]
+    })
+  );
+}
 
     /* ===================================== */
     /* IMAGES */
@@ -568,9 +590,7 @@ export class AddProductComponent implements OnInit {
         100
       );
 
-console.log(finalPrice)
-console.log(actualPrice)
-console.log(finalPrice < actualPrice)
+
     if (finalPrice < actualPrice) {
 
       this.errorMessage.set(
@@ -737,10 +757,7 @@ console.log(finalPrice < actualPrice)
         value.stockQuantity ?? 0
       )
     );
-    console.log("___________________")
-console.log(value.isInStock)
-console.log( value.isInStock ?? true)
-    console.log("___________________")
+ 
 
     formData.append(
       'IsInStock',
@@ -878,14 +895,12 @@ console.log( value.isInStock ?? true)
   /* ========================================= */
 
   save(): void {
-console.log("save")
     this.errorMessage.set('');
 
 
     /* ===================================== */
     /* FORM VALIDATION */
     /* ===================================== */
-console.log(this.productForm.invalid)
     if (
       this.productForm.invalid
     ) {
@@ -937,12 +952,9 @@ console.log(this.productForm.invalid)
     const formData =
       this.buildFormData();
 
-console.log(this.isEditing())
-//console.log(this.product()!.id)
     if (this.isEditing()) {
 
-  console.log('CALLING UPDATE PRODUCT');
-console.log(formData)
+  
   this.productService
     .updateProduct(
       this.product()!.id,
@@ -952,7 +964,6 @@ console.log(formData)
 
       next: () => {
 
-        console.log('UPDATE SUCCESS');
 
         this.isSubmitting.set(false);
 
@@ -962,7 +973,6 @@ console.log(formData)
 
       error: (error) => {
 
-        console.error('UPDATE ERROR:', error);
 
         this.isSubmitting.set(false);
 
@@ -986,7 +996,6 @@ console.log(formData)
 
 } else {
 
-  console.log('CALLING CREATE PRODUCT');
 
   this.productService
     .createProduct(formData)
@@ -994,7 +1003,6 @@ console.log(formData)
 
       next: () => {
 
-        console.log('CREATE SUCCESS');
 
         this.isSubmitting.set(false);
 
@@ -1004,7 +1012,6 @@ console.log(formData)
 
       error: (error) => {
 
-        console.error('CREATE ERROR:', error);
 
         this.isSubmitting.set(false);
 if (error.status === 409) {

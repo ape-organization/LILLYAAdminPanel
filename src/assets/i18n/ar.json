@@ -38,7 +38,7 @@
     "allSubCategories": "كل التصنيفات الفرعية",
     "allBrands": "كل العلامات التجارية",
     "clearFilters": "مسح الفلاتر",
-    "cosmetics": " LILLY",
+    "cosmetics": " LILY",
     "login": "تسجيل الدخول",
     "logout": "تسجيل الخروج",
     "admin": "الإدارة",
@@ -91,6 +91,9 @@
     "title": "لوحة التحكم",
     "monthlyPerformance": "أداء الشهر",
     "totalPerformance": "الأداء الإجمالي",
+      "monthlyVisitors": "الزئرين شهريا",
+    "count":"العدد",
+    "totalVisitorsMonthly":"عدد كل الزائرين بالشهر",
     "currentMonth": "الشهر الحالي",
     "allTime": "الإجمالي",
 
@@ -146,6 +149,7 @@
 
   "products": {
         "noVariants":"______",
+    "noCategory":"____",
 
 "VARIANTS": {
 "TITLE": "خيارات المنتج",
