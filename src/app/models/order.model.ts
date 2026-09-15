@@ -39,3 +39,12 @@ export interface Order {
 
   items: OrderItem[];
 }
+ export interface PagedResponse<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasMore: boolean;
+  hasPreviousPage: boolean;
+}
