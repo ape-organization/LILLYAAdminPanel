@@ -192,14 +192,6 @@ export class Orders implements OnInit {
 
         next: (response) => {
 
-          console.log(response);
-
-
-          /*
-           * First server page replaces
-           * the currently loaded orders.
-           */
-
           this.orders.set(
             response.items ?? []
           );
@@ -240,10 +232,6 @@ export class Orders implements OnInit {
 
         error: (error) => {
 
-          console.error(
-            'Load orders error:',
-            error
-          );
 
 
           this.orders.set([]);
@@ -355,12 +343,6 @@ export class Orders implements OnInit {
 
 
         error: (error) => {
-
-          console.error(
-            'Load more orders error:',
-            error
-          );
-
 
           this.loadingMore.set(false);
 
@@ -495,10 +477,7 @@ export class Orders implements OnInit {
 
         error: (error) => {
 
-          console.error(
-            'Update order status error:',
-            error
-          );
+      
 
 
           /*
@@ -590,10 +569,6 @@ export class Orders implements OnInit {
 
             error: (error) => {
 
-              console.error(
-                'Cancel order error:',
-                error
-              );
 
 
               this.errorMessage.set(

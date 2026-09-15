@@ -581,12 +581,11 @@
 {
   display: flex;
   justify-content: flex-end;
-  margin: 5px;
-
 }
-.loadMore button
+.load-more-btn
 {
- 
+
+  margin: 5px;
   background-color: var(--color-primary-light);
   color: var(--color-surface-soft);
 }
