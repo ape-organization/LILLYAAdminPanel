@@ -63,6 +63,8 @@
   },
 
   "nav": {
+    "heelsizes":"Hell Sizes",
+    "sizes":"Sizes",
     "home": "Home",
     "products": "Products",
     "categories": "Categories",
