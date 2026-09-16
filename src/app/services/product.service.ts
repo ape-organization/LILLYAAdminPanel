@@ -111,25 +111,13 @@ getProductsByName(
     }
 
 
-    if (subCategoryId !== null) {
-      params['subCategoryId'] =
-        subCategoryId.toString();
-    }
-
-
-    if (brandId !== null) {
-      params['brandId'] =
-        brandId.toString();
-    }
-
-
     if (offers) {
       params['offers'] = 'true';
     }
 
 
     return this.http.get<PagedResponse<Product>>(
-      this.apiUrl,
+      this.apiUrl+"/admin",
       {
         params
       }
