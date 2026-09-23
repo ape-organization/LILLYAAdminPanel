@@ -22,7 +22,7 @@ export class OrderService {
   // ============================================================
 getOrders(
   page: number = 1,
-  pageSize: number = 30
+  pageSize: number = 100
 ): Observable<PagedResponse<Order>> {
 
   return this.http.get<PagedResponse<Order>>(

@@ -109,7 +109,7 @@ export class Orders implements OnInit {
 
 
   readonly serverPageSize =
-    signal(30);
+    signal(100);
 
 
   readonly hasNextPage =

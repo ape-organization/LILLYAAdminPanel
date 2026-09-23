@@ -76,13 +76,12 @@ export class ProductVariantsComponent {
   /**
    * Add a new empty variant.
    */
-  addVariant(): void {
-
-    this.variants.push(
-      this.createVariant()
-    );
-
-  }
+addVariant(): void {
+  this.variants.insert(
+    0,
+    this.createVariant()
+  );
+}
 
 
   /**
