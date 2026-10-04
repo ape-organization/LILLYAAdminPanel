@@ -169,12 +169,7 @@ export class AddProductComponent implements OnInit {
       ],
 
       actualPrice: [
-        0,
-        [
-          Validators.required,
-          Validators.min(0)
-        ]
-      ],
+        0 ],
 
       sellingPrice: [
         0,
@@ -591,7 +586,7 @@ for (const variant of product.variants ?? []) {
       );
 
 
-    if (finalPrice < actualPrice) {
+/*     if (finalPrice < actualPrice) {
 
       this.errorMessage.set(
         'PRICE_BELOW_ACTUAL'
@@ -599,7 +594,7 @@ for (const variant of product.variants ?? []) {
 
       return false;
 
-    }
+    } */
 
 
     return true;
@@ -737,8 +732,7 @@ for (const variant of product.variants ?? []) {
 
     formData.append(
       'ActualPrice',
-      String(
-        value.actualPrice ?? 0
+      String( 0
       )
     );
 

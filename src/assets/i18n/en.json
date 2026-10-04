@@ -2,6 +2,7 @@
 {
     
   "SIZES": {
+    "DELETE":"Are you sure you want to delete size ",
     "TITLE": "Sizes",
     "SUBTITLE": "Manage available product sizes",
     "ADD": "Add Size",
@@ -17,6 +18,7 @@
   },
 
   "HEEL_SIZES": {
+    "DELETE":"Are you sure you want to delete heel size ",
     "TITLE": "Heel Sizes",
     "SUBTITLE": "Manage available heel sizes",
     "ADD": "Add Heel Size",
@@ -214,7 +216,7 @@
 
 "STOCK": {
   "TITLE": "Stock & Availability",
-  "SUBTITLE": "Manage product stock and availability",
+  "SUBTITLE": "Manage product  availability",
 
   "QUANTITY": "Stock Quantity",
   "QUANTITY_HINT": "Enter the available quantity of this product",

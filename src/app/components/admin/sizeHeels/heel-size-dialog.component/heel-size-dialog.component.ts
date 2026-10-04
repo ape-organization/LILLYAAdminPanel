@@ -60,18 +60,17 @@ export class HeelSizeDialogComponent {
       MatDialogRef<HeelSizeDialogComponent>,
 
     @Inject(MAT_DIALOG_DATA)
-    public readonly data: HeelSizeDialogData
+    public readonly data: any
   ) {
-
-    if (data?.id) {
+    if (data?.heelSize?.id) {
 
       this.isEdit.set(true);
 
     }
 
-    this.name.set(data?.name ?? '');
+    this.name.set(data?.heelSize?.name ?? '');
 
-  }
+}
 
 
   save(): void {

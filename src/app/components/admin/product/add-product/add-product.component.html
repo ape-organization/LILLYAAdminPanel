@@ -189,7 +189,7 @@
 
           <!-- ACTUAL PRICE -->
 
-          <div class="form-field">
+          <!-- <div class="form-field">
 
             <label for="actualPrice">
 
@@ -215,7 +215,7 @@
 
             </div>
 
-          </div>
+          </div> -->
 
 
           <!-- SELLING PRICE -->
@@ -279,19 +279,7 @@
           </div>
 
 
-          <!-- FINAL PRICE -->
-
-          <div class="price-preview">
-
-            <span>
-              {{ 'products.FINAL_PRICE' | translate }}
-            </span>
-
-            <strong>
-              {{ getPriceAfterDiscount() | number:'1.2-2' }}
-            </strong>
-
-          </div>
+         
 
 
           <!-- CATEGORY -->
@@ -335,7 +323,19 @@
             </select>
 
           </div>
+ <!-- FINAL PRICE -->
 
+          <div class="price-preview">
+
+            <span>
+              {{ 'products.FINAL_PRICE' | translate }}
+            </span>
+
+            <strong>
+              {{ getPriceAfterDiscount() | number:'1.2-2' }}
+            </strong>
+
+          </div>
 
         </div>
 
@@ -376,7 +376,7 @@
         <div class="stock-layout">
 
 
-          <div class="form-field stock-input">
+        <!--   <div class="form-field stock-input">
 
             <label for="stockQuantity">
 
@@ -396,7 +396,7 @@
               {{ 'products.STOCK.QUANTITY_HINT' | translate }}
             </small>
 
-          </div>
+          </div> -->
 
 
           <div class="stock-status">

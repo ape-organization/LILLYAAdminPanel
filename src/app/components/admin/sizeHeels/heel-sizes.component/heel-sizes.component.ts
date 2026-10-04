@@ -26,7 +26,8 @@ import {
 } from '@angular/material/progress-spinner';
 
 import {
-  TranslatePipe
+  TranslatePipe,
+  TranslateService
 } from '@ngx-translate/core';
 
 import {
@@ -41,6 +42,7 @@ import {
 import {
   HeelSizeDialogComponent
 } from '../heel-size-dialog.component/heel-size-dialog.component';
+import { ConfirmDeleteComponent } from '../../../../shared/confirm-delete/confirm-delete.component';
 
 
 @Component({
@@ -350,23 +352,28 @@ export class HeelSizesComponent implements OnInit {
   // =========================================================
   // DELETE
   // =========================================================
-
+private readonly translate =
+    inject(TranslateService);
   deleteHeelSize(
     heelSize: HeelSize
   ): void {
 
-    const confirmed =
-      confirm(
-        `Are you sure you want to delete "${heelSize.name}"?`
-      );
 
+    this.dialog
+      .open(
+        ConfirmDeleteComponent,
+        {
+          data: this.translate.instant(
+            'HEEL_SIZES.DELETE'
+          )+heelSize.name
+        }
+      )
+      .afterClosed()
+      .subscribe(result => {
 
-    if (!confirmed) {
-
-      return;
-
-    }
-
+        if (!result?.status) {
+          return;
+        }
 
     this.deletingId.set(
       heelSize.id
@@ -407,7 +414,7 @@ export class HeelSizesComponent implements OnInit {
         }
 
       });
-
+    })
   }
 
 }

@@ -47,7 +47,7 @@
   <!-- ====================================================== -->
   <!-- PAGINATION INFO -->
   <!-- ====================================================== -->
-
+  @if (hasMore()) {
   <div class="pagination-info">
 
     <p>
@@ -55,6 +55,7 @@
     </p>
 
   </div>
+}
 
 
   <!-- ====================================================== -->
@@ -468,7 +469,7 @@
         <!-- ACTUAL PRICE -->
         <!-- ================================================== -->
 
-        <ng-container matColumnDef="price">
+        <!-- <ng-container matColumnDef="price">
 
           <th
             mat-header-cell
@@ -493,7 +494,7 @@
 
           </td>
 
-        </ng-container>
+        </ng-container> -->
 
 
         <!-- ================================================== -->
@@ -619,7 +620,7 @@
 
             <div class="stock-cell">
 
-              <span
+             <!--  <span
                 class="stock-quantity"
                 [class.low-stock]="
                   product.isInStock &&
@@ -634,7 +635,7 @@
 
               </span>
 
-
+ -->
               <span
                 class="stock-status"
                 [class.in-stock]="

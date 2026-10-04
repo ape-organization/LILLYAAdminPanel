@@ -154,23 +154,21 @@ export class SizeDialogComponent {
         .subscribe({
 
           next: updatedSize => {
-
             this.saving.set(false);
 
-            this.dialogRef.close(
+         /*    this.dialogRef.close(
               updatedSize
-            );
+            ); */
+  this.dialogRef.close({
+      id: this.editingSize?.id,
+      name: name
+    });
+
 
           },
 
           error: error => {
-
-            console.error(
-              'Error updating size:',
-              error
-            );
-
-            this.saving.set(false);
+ this.saving.set(false);
 
           }
 
@@ -201,13 +199,7 @@ export class SizeDialogComponent {
         },
 
         error: error => {
-
-          console.error(
-            'Error creating size:',
-            error
-          );
-
-          this.saving.set(false);
+ this.saving.set(false);
 
         }
 

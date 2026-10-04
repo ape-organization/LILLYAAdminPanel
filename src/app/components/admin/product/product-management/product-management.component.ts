@@ -438,7 +438,7 @@ export class ProductManagementComponent
 
     'category',
 
-    'price',
+  
 
     'sellingPrice',
 

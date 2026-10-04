@@ -28,7 +28,8 @@ import {
 } from '@angular/material/progress-spinner';
 
 import {
-  TranslatePipe
+  TranslatePipe,
+  TranslateService
 } from '@ngx-translate/core';
 
 import {
@@ -39,6 +40,7 @@ import {
   Size
 } from '../../../../models/size.model';
 import { SizeDialogComponent } from '../size-dialog.component/size-dialog.component';
+import { ConfirmDeleteComponent } from '../../../../shared/confirm-delete/confirm-delete.component';
 
 
 
@@ -246,11 +248,11 @@ export class SizesComponent implements OnInit {
 
     dialogRef.afterClosed()
       .subscribe(result => {
+console.log(result)
 
         if (!result) {
           return;
         }
-
 
         this.sizes.update(
           current =>
@@ -259,7 +261,10 @@ export class SizesComponent implements OnInit {
                 ? result
                 : item
             )
-        );
+        )
+
+
+
 
       });
 
@@ -269,20 +274,27 @@ export class SizesComponent implements OnInit {
   // =========================================================
   // DELETE
   // =========================================================
-
+  private readonly translate =
+    inject(TranslateService);
   deleteSize(size: Size): void {
 
-    const confirmed =
-      confirm(
-        `Are you sure you want to delete "${size.name}"?`
-      );
+   
+    this.dialog
+      .open(
+        ConfirmDeleteComponent,
+        {
+          data: this.translate.instant(
+            'SIZES.DELETE'
+          )+size.name
+        }
+      )
+      .afterClosed()
+      .subscribe(result => {
 
-
-    if (!confirmed) {
-      return;
-    }
-
-
+        if (!result?.status) {
+          return;
+        }
+    
     this.deletingId.set(
       size.id
     );
@@ -320,7 +332,7 @@ export class SizesComponent implements OnInit {
         }
 
       });
-
+  })
   }
 
 }
