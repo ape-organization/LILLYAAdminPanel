@@ -551,7 +551,7 @@ export class ProductManagementComponent
         next: (
           response: PagedResponse<Product>
         ) => {
-
+console.log(response)
           const items =
             Array.isArray(response?.items)
               ? response.items
@@ -1219,35 +1219,19 @@ export class ProductManagementComponent
   // PRIMARY IMAGE
   // ==========================================================
 
-  getPrimaryImage(
-    product: Product
-  ): string | null {
+ getPrimaryImage(
+  product: Product
+): any | null {
 
-    if (
-      !product.images ||
-      product.images.length === 0
-    ) {
-
-      return null;
-
-    }
-
-
-    const sortedImages =
-      [...product.images]
-        .sort(
-          (a, b) =>
-            (a.sortOrder ?? 0) -
-            (b.sortOrder ?? 0)
-        );
-var image=environment.imageBaseUrl+ sortedImages[0]?.imageUrl
-
-    return (
-     image ??
-      null
-    );
-
+  if (
+    !product.images ||
+    product.images.length === 0
+  ) {
+    return null;
   }
+
+  return product.images[0] ?? null;
+}
 
 
   // ==========================================================
@@ -1276,7 +1260,8 @@ var image=environment.imageBaseUrl+ sortedImages[0]?.imageUrl
 
     }
 
-
+console.log(      `${environment.imageBaseUrl}${imageUrl}`
+)
     return (
       `${environment.imageBaseUrl}${imageUrl}`
     );
