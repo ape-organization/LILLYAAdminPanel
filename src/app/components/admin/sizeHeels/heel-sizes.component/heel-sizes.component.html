@@ -60,7 +60,9 @@
     }
 
   </div>
-
+<p style="color: rgb(154, 9, 9);"
+*ngIf="error()"
+>{{errorMsg()}}</p>
   @if (loading()) {
 
     <div class="loading-container">

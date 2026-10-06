@@ -1,3 +1,4 @@
+
 <div class="modal-overlay">
 
   <div class="modal-container">
@@ -73,7 +74,7 @@
       <!-- ======================================= -->
 
       <app-product-images
-        [existingImages]="product()?.images"
+        [existingImages]="product()?.images ?? []"
         (imagesChange)="onImagesChange($event)"
       />
 
@@ -187,37 +188,6 @@
           </div>
 
 
-          <!-- ACTUAL PRICE -->
-
-          <!-- <div class="form-field">
-
-            <label for="actualPrice">
-
-              {{ 'products.ACTUAL_PRICE' | translate }}
-
-              <span>*</span>
-
-            </label>
-
-            <div class="input-with-icon">
-
-              <mat-icon>
-                payments
-              </mat-icon>
-
-              <input
-                id="actualPrice"
-                type="number"
-                min="0"
-                step="0.01"
-                formControlName="actualPrice"
-              />
-
-            </div>
-
-          </div> -->
-
-
           <!-- SELLING PRICE -->
 
           <div class="form-field">
@@ -279,9 +249,6 @@
           </div>
 
 
-         
-
-
           <!-- CATEGORY -->
 
           <div class="form-field">
@@ -323,7 +290,9 @@
             </select>
 
           </div>
- <!-- FINAL PRICE -->
+
+
+          <!-- FINAL PRICE -->
 
           <div class="price-preview">
 
@@ -374,30 +343,6 @@
 
 
         <div class="stock-layout">
-
-
-        <!--   <div class="form-field stock-input">
-
-            <label for="stockQuantity">
-
-              {{ 'products.STOCK.QUANTITY' | translate }}
-
-            </label>
-
-            <input
-              id="stockQuantity"
-              type="number"
-              min="0"
-              step="1"
-              formControlName="stockQuantity"
-            />
-
-            <small>
-              {{ 'products.STOCK.QUANTITY_HINT' | translate }}
-            </small>
-
-          </div> -->
-
 
           <div class="stock-status">
 
@@ -608,11 +553,7 @@
 
           }
 
-          {{
-            isEditing()
-              ? ('common.save' | translate)
-              : ('common.save' | translate)
-          }}
+          {{ 'common.save' | translate }}
 
         </button>
 

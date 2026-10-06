@@ -18,27 +18,28 @@
   },
 
   "HEEL_SIZES": {
-    "DELETE":"Are you sure you want to delete heel size ",
-    "TITLE": "Heel Sizes",
-    "SUBTITLE": "Manage available heel sizes",
-    "ADD": "Add Heel Size",
-    "ADD_TITLE": "Add Heel Size",
-    "EDIT_TITLE": "Edit Heel Size",
-    "MODAL_SUBTITLE": "Enter the heel size",
-    "NAME": "Heel Size",
-    "NAME_PLACEHOLDER": "Enter heel size",
-    "SEARCH": "Search heel sizes...",
-    "LIST_TITLE": "All Heel Sizes",
-    "NO_SIZES": "No heel sizes found",
-    "NO_SIZES_DESCRIPTION": "There are no heel sizes to display."
+    "DELETE":"Are you sure you want to delete heels size ",
+    "TITLE": "Heels Size",
+    "SUBTITLE": "Manage available heels size",
+    "ADD": "Add Heels Size",
+    "ADD_TITLE": "Add Heels Size",
+    "EDIT_TITLE": "Edit Heels Size",
+    "MODAL_SUBTITLE": "Enter the heels size",
+    "NAME": "Heels Size",
+    "NAME_PLACEHOLDER": "Enter heels size",
+    "SEARCH": "Search heels size...",
+    "LIST_TITLE": "All Heels Size",
+    "NO_SIZES": "No heels size found",
+    "NO_SIZES_DESCRIPTION": "There are no heels size to display."
   },
 
 
   "common": {
+
     "saveChanges":"Save Changes",
       "allCategories": "All Categories",
     "clearFilters": "Clear Filters",
-    "cosmetics": "LILY",
+    "cosmetics": "LILYSTORE",
     "login": "LOGIN",
     "logout": "LOGOUT",
     "admin": "ADMIN",
@@ -65,7 +66,7 @@
   },
 
   "nav": {
-    "heelsizes":"Hell Sizes",
+    "heelsizes":"Heels Size",
     "sizes":"Sizes",
     "home": "Home",
     "products": "Products",
@@ -154,27 +155,28 @@
     "noCategory":"____",
     "noVariants":"______",
 "VARIANTS": {
+  "SELECT_HEEL_SIZES":"SELECT HEEL SIZES",
 "TITLE": "Product Variants",
-"SUBTITLE": "Manage sizes, heel sizes, and stock for this product",
+"SUBTITLE": "Manage sizes, heels size, and stock for this product",
 "ADD": "Add Variant",
 
   "EMPTY_TITLE": "No Variants Added",
-  "EMPTY_TEXT": "Add variants to allow customers to choose different sizes or heel sizes",
+  "EMPTY_TEXT": "Add variants to allow customers to choose different sizes or heels size",
   "ADD_FIRST": "Add First Variant",
 
   "SIZE": "Size",
   "NO_SIZE": "No Size",
 
-  "HEEL_SIZE": "Heel Size",
-  "NO_HEEL_SIZE": "No Heel Size",
+  "HEEL_SIZE": "Heels Size",
+  "NO_HEEL_SIZE": "No Heels Size",
 
   "STOCK": "Stock Quantity",
 
   "REMOVE": "Remove Variant",
 
-  "SELECTION_REQUIRED": "Please select a size or heel size",
+  "SELECTION_REQUIRED": "Please select a size or heels size",
 
-  "INFO": "You can add different combinations of sizes and heel sizes for this product. Each variant has its own stock quantity."
+  "INFO": "You can add different combinations of sizes and heels sizes for this product. Each variant has its own stock quantity."
 }
 ,
 "IMAGES": {

@@ -122,9 +122,10 @@ export class SizeDialogComponent {
   // =========================================================
   // SAVE
   // =========================================================
-
+error=signal(false)
+errorMsg=signal("")
   saveSize(): void {
-
+this.error.set(false)
     const name =
       this.sizeName()
         .trim();
@@ -168,6 +169,8 @@ export class SizeDialogComponent {
           },
 
           error: error => {
+              this.error.set(true)
+          this.errorMsg.set("Failed. This size name already exists or an error occurred.")
  this.saving.set(false);
 
           }
@@ -189,7 +192,6 @@ export class SizeDialogComponent {
       .subscribe({
 
         next: createdSize => {
-
           this.saving.set(false);
 
           this.dialogRef.close(
@@ -199,6 +201,8 @@ export class SizeDialogComponent {
         },
 
         error: error => {
+          this.error.set(true)
+          this.errorMsg.set("Failed. This size name already exists or an error occurred.")
  this.saving.set(false);
 
         }

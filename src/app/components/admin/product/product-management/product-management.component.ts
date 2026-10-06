@@ -551,7 +551,6 @@ export class ProductManagementComponent
         next: (
           response: PagedResponse<Product>
         ) => {
-console.log(response)
           const items =
             Array.isArray(response?.items)
               ? response.items
@@ -616,13 +615,7 @@ console.log(response)
 
 
         error: error => {
-
-          console.error(
-            'Error loading products:',
-            error
-          );
-
-          this.errorMessage.set(
+this.errorMessage.set(
             'Failed to load products.'
           );
 
@@ -793,13 +786,7 @@ console.log(response)
 
 
         error: error => {
-
-          console.error(
-            'Error loading all products:',
-            error
-          );
-
-          this.errorMessage.set(
+this.errorMessage.set(
             'Failed to load products.'
           );
 
@@ -1024,14 +1011,7 @@ console.log(response)
 
 
         error: error => {
-
-          console.error(
-            'Error searching products:',
-            error
-          );
-
-
-          this.products.set([]);
+this.products.set([]);
 
           this.totalCount.set(0);
 
@@ -1260,8 +1240,6 @@ console.log(response)
 
     }
 
-console.log(      `${environment.imageBaseUrl}${imageUrl}`
-)
     return (
       `${environment.imageBaseUrl}${imageUrl}`
     );
@@ -1410,13 +1388,7 @@ console.log(      `${environment.imageBaseUrl}${imageUrl}`
 
 
             error: error => {
-
-              console.error(
-                'Delete product error:',
-                error
-              );
-
-              this.errorMessage.set(
+ this.errorMessage.set(
                 'Failed to delete product.'
               );
 

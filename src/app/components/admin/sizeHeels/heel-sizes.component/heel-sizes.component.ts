@@ -137,7 +137,8 @@ export class HeelSizesComponent implements OnInit {
   // =========================================================
   // LOAD
   // =========================================================
-
+error=signal(false)
+errorMsg=signal("")
   loadHeelSizes(): void {
 
     this.loading.set(true);
@@ -156,13 +157,7 @@ export class HeelSizesComponent implements OnInit {
         },
 
         error: error => {
-
-          console.error(
-            'Error loading heel sizes:',
-            error
-          );
-
-          this.loading.set(false);
+ this.loading.set(false);
 
         }
 
@@ -238,7 +233,6 @@ export class HeelSizesComponent implements OnInit {
           .subscribe({
 
             next: createdHeelSize => {
-
               this.heelSizes.update(
                 current => [
                   ...current,
@@ -249,11 +243,9 @@ export class HeelSizesComponent implements OnInit {
             },
 
             error: error => {
-
-              console.error(
-                'Error creating heel size:',
-                error
-              );
+ this.error.set(true)
+          this.errorMsg.set("Failed. This size heels name already exists or an error occurred.")
+              
 
             }
 
@@ -335,10 +327,8 @@ export class HeelSizesComponent implements OnInit {
 
             error: error => {
 
-              console.error(
-                'Error updating heel size:',
-                error
-              );
+               this.error.set(true)
+          this.errorMsg.set("Failed. This sizeheels name already exists or an error occurred.")
 
             }
 
@@ -402,14 +392,7 @@ private readonly translate =
         },
 
         error: error => {
-
-          console.error(
-            'Error deleting heel size:',
-            error
-          );
-
-
-          this.deletingId.set(null);
+this.deletingId.set(null);
 
         }
 

@@ -1,3 +1,4 @@
+
 import {
   Component,
   Inject,
@@ -42,17 +43,52 @@ import {
   forkJoin,
   finalize
 } from 'rxjs';
-import { ProductImageItem, ProductImagesComponent } from '../product-images.component/product-images.component';
-import { ProductVariantsComponent } from '../product-variants.component/product-variants.component';
-import { ProductService } from '../../../../services/product.service';
-import { CategoryService } from '../../../../services/category.service';
-import { SizeService } from '../../../../services/size.service';
-import { HeelSizeService } from '../../../../services/heel-size.service';
-import { Product } from '../../../../models/product.model';
-import { Category } from '../../../../models/category.model';
-import { Size } from '../../../../models/size.model';
-import { HeelSize } from '../../../../models/heel-size.model';
-import { environment } from '../../../../../environments/environment';
+
+import {
+  ProductImageItem,
+  ProductImagesComponent
+} from '../product-images.component/product-images.component';
+
+import {
+  ProductVariantsComponent
+} from '../product-variants.component/product-variants.component';
+
+import {
+  ProductService
+} from '../../../../services/product.service';
+
+import {
+  CategoryService
+} from '../../../../services/category.service';
+
+import {
+  SizeService
+} from '../../../../services/size.service';
+
+import {
+  HeelSizeService
+} from '../../../../services/heel-size.service';
+
+import {
+  Product
+} from '../../../../models/product.model';
+
+import {
+  Category
+} from '../../../../models/category.model';
+
+import {
+  Size
+} from '../../../../models/size.model';
+
+import {
+  HeelSize
+} from '../../../../models/heel-size.model';
+
+import {
+  environment
+} from '../../../../../environments/environment';
+
 
 @Component({
   selector: 'app-add-product',
@@ -79,7 +115,8 @@ import { environment } from '../../../../../environments/environment';
 })
 export class AddProductComponent implements OnInit {
 
-  private readonly fb = inject(FormBuilder);
+  private readonly fb =
+    inject(FormBuilder);
 
   private readonly productService =
     inject(ProductService);
@@ -93,7 +130,6 @@ export class AddProductComponent implements OnInit {
   private readonly heelSizeService =
     inject(HeelSizeService);
 
-
   private readonly dialogRef =
     inject(MatDialogRef<AddProductComponent>);
 
@@ -105,14 +141,11 @@ export class AddProductComponent implements OnInit {
   readonly product =
     signal<Product | null>(null);
 
-
   readonly categories =
     signal<Category[]>([]);
 
-
   readonly sizes =
     signal<Size[]>([]);
-
 
   readonly heelSizes =
     signal<HeelSize[]>([]);
@@ -125,14 +158,11 @@ export class AddProductComponent implements OnInit {
   readonly isLoading =
     signal(true);
 
-
   readonly isSubmitting =
     signal(false);
 
-
   readonly errorMessage =
     signal('');
-
 
   readonly isEditing =
     signal(false);
@@ -169,7 +199,8 @@ export class AddProductComponent implements OnInit {
       ],
 
       actualPrice: [
-        0 ],
+        0
+      ],
 
       sellingPrice: [
         0,
@@ -244,9 +275,13 @@ export class AddProductComponent implements OnInit {
 
     if (data) {
 
-      this.product.set(data.product);
+      this.product.set(
+        data.product
+      );
 
-      this.isEditing.set(data.isEditing);
+      this.isEditing.set(
+        data.isEditing
+      );
 
     }
 
@@ -270,8 +305,6 @@ export class AddProductComponent implements OnInit {
 
   private loadLookups(): void {
 
-//    this.isLoading.set(true);
-
     forkJoin({
 
       categories:
@@ -286,7 +319,9 @@ export class AddProductComponent implements OnInit {
     })
       .pipe(
         finalize(() => {
+
           this.isLoading.set(false);
+
         })
       )
       .subscribe({
@@ -310,7 +345,10 @@ export class AddProductComponent implements OnInit {
           );
 
 
-          if (this.isEditing()) {
+          if (
+            this.isEditing() &&
+            this.product()
+          ) {
 
             this.patchProduct(
               this.product()!
@@ -382,8 +420,7 @@ export class AddProductComponent implements OnInit {
 
     this.variants.clear();
 
-
-   /*  for (
+    for (
       const variant
       of product.variants ?? []
     ) {
@@ -391,6 +428,10 @@ export class AddProductComponent implements OnInit {
       this.variants.push(
 
         this.fb.group({
+
+          id: [
+            variant.id ?? null
+          ],
 
           sizeId: [
             variant.sizeId ?? null
@@ -412,59 +453,79 @@ export class AddProductComponent implements OnInit {
 
       );
 
-    } */
-for (const variant of product.variants ?? []) {
-  this.variants.push(
-    this.fb.group({
-      id: [variant.id ?? null],
+    }
 
-      sizeId: [
-        variant.sizeId ?? null
-      ],
-
-      heelSizeId: [
-        variant.heelSizeId ?? null
-      ],
-
-      stockQuantity: [
-        variant.stockQuantity ?? 0,
-        [
-          Validators.required,
-          Validators.min(0)
-        ]
-      ]
-    })
-  );
-}
 
     /* ===================================== */
     /* IMAGES */
     /* ===================================== */
 
+    /*
+     * Product.images is now string[].
+     *
+     * The API already returns the images ordered
+     * by SortOrder:
+     *
+     * images[0] = first image
+     * images[1] = second image
+     * etc.
+     *
+     * Therefore we must NOT access:
+     *
+     * image.id
+     * image.imageUrl
+     * image.sortOrder
+     *
+     * here.
+     */
+
     this.productImages =
       (product.images ?? [])
-        .sort(
-          (a, b) =>
-            a.sortOrder - b.sortOrder
+        .filter(
+          imageUrl =>
+            !!imageUrl &&
+            imageUrl.trim().length > 0
         )
-        .map(image => ({
+        .map(
+          (
+            imageUrl,
+            index
+          ) => ({
 
-          id: image.id,
+            /*
+             * Keep the URL as the identity
+             * of an existing image.
+             *
+             * The backend uses this URL to know
+             * which existing ProductImage is being
+             * kept/replaced.
+             */
+            imageUrl:
+              imageUrl,
 
-          imageUrl:
-            image.imageUrl,
+            /*
+             * Full URL used only for preview.
+             */
+            previewUrl:
+              this.getImageUrl(
+                imageUrl
+              ),
 
-          previewUrl:
-            this.getImageUrl(
-              image.imageUrl
-            ),
+            /*
+             * API array order is the
+             * ProductImage.SortOrder.
+             */
+            sortOrder:
+              index,
 
-          sortOrder:
-            image.sortOrder,
+            /*
+             * Existing database image.
+             */
+            isNew:
+              false
 
-          isNew: false
-
-        }));
+          })
+        );
 
   }
 
@@ -478,13 +539,19 @@ for (const variant of product.variants ?? []) {
   ): string {
 
     if (!imageUrl) {
+
       return '';
+
     }
 
 
     if (
-      imageUrl.startsWith('http://') ||
-      imageUrl.startsWith('https://')
+      imageUrl.startsWith(
+        'http://'
+      ) ||
+      imageUrl.startsWith(
+        'https://'
+      )
     ) {
 
       return imageUrl;
@@ -509,8 +576,28 @@ for (const variant of product.variants ?? []) {
     images: ProductImageItem[]
   ): void {
 
+    /*
+     * ProductImagesComponent controls the
+     * current image list.
+     *
+     * Existing images retain imageUrl.
+     * New images have file.
+     */
+
     this.productImages =
-      images;
+      images.map(
+        (
+          image,
+          index
+        ) => ({
+
+          ...image,
+
+          sortOrder:
+            index
+
+        })
+      );
 
   }
 
@@ -586,15 +673,17 @@ for (const variant of product.variants ?? []) {
       );
 
 
-/*     if (finalPrice < actualPrice) {
+    /*
+     * Keep this validation disabled
+     * exactly as in your current component.
+     *
+     * Variables are intentionally calculated
+     * because the business rule can be enabled
+     * later without changing the structure.
+     */
 
-      this.errorMessage.set(
-        'PRICE_BELOW_ACTUAL'
-      );
-
-      return false;
-
-    } */
+    void actualPrice;
+    void finalPrice;
 
 
     return true;
@@ -730,10 +819,12 @@ for (const variant of product.variants ?? []) {
     );
 
 
+    /*
+     * Keep your current behaviour.
+     */
     formData.append(
       'ActualPrice',
-      String( 0
-      )
+      String(0)
     );
 
 
@@ -751,7 +842,7 @@ for (const variant of product.variants ?? []) {
         value.stockQuantity ?? 0
       )
     );
- 
+
 
     formData.append(
       'IsInStock',
@@ -778,7 +869,28 @@ for (const variant of product.variants ?? []) {
 
 
     variants.forEach(
-      (variant: any, index: number) => {
+      (
+        variant: any,
+        index: number
+      ) => {
+
+        /*
+         * Preserve the variant ID when editing.
+         */
+        if (
+          variant.id !== null &&
+          variant.id !== undefined
+        ) {
+
+          formData.append(
+            `Variants[${index}].Id`,
+            String(
+              variant.id
+            )
+          );
+
+        }
+
 
         if (
           variant.sizeId !== null &&
@@ -825,26 +937,44 @@ for (const variant of product.variants ?? []) {
     /* IMAGES */
     /* ===================================== */
 
+    /*
+     * IMPORTANT:
+     *
+     * Existing images:
+     *   ImageUrl = existing URL
+     *   Image = null
+     *
+     * Replaced images:
+     *   ImageUrl = OLD URL
+     *   Image = NEW FILE
+     *
+     * New images:
+     *   ImageUrl = omitted
+     *   Image = NEW FILE
+     *
+     * Removed images:
+     *   They simply do not appear here.
+     *
+     * This allows the backend to synchronize
+     * the database using ImageUrl.
+     */
+
     this.productImages.forEach(
-      (image, index) => {
+      (
+        image,
+        index
+      ) => {
 
         /*
-         * Existing image ID
+         * Existing image identity.
+         *
+         * Keep the original URL even when
+         * a replacement file is selected.
          */
-        if (image.id) {
-
-          formData.append(
-            `Images[${index}].Id`,
-            String(image.id)
-          );
-
-        }
-
-
-        /*
-         * Existing image URL
-         */
-        if (image.imageUrl) {
+        if (
+          image.imageUrl &&
+          image.imageUrl.trim().length > 0
+        ) {
 
           formData.append(
             `Images[${index}].ImageUrl`,
@@ -855,7 +985,7 @@ for (const variant of product.variants ?? []) {
 
 
         /*
-         * Always send the current order
+         * Always send the current display order.
          */
         formData.append(
           `Images[${index}].SortOrder`,
@@ -864,7 +994,7 @@ for (const variant of product.variants ?? []) {
 
 
         /*
-         * New uploaded image
+         * New file or replacement file.
          */
         if (image.file) {
 
@@ -889,12 +1019,14 @@ for (const variant of product.variants ?? []) {
   /* ========================================= */
 
   save(): void {
+
     this.errorMessage.set('');
 
 
     /* ===================================== */
     /* FORM VALIDATION */
     /* ===================================== */
+
     if (
       this.productForm.invalid
     ) {
@@ -946,87 +1078,112 @@ for (const variant of product.variants ?? []) {
     const formData =
       this.buildFormData();
 
+
+    /* ===================================== */
+    /* UPDATE */
+    /* ===================================== */
+
     if (this.isEditing()) {
 
-  
-  this.productService
-    .updateProduct(
-      this.product()!.id,
-      formData
-    )
-    .subscribe({
+      this.productService
+        .updateProduct(
+          this.product()!.id,
+          formData
+        )
+        .pipe(
+          finalize(() => {
 
-      next: () => {
+            this.isSubmitting.set(false);
+
+          })
+        )
+        .subscribe({
+
+          next: () => {
+
+            this.dialogRef.close(
+              true
+            );
+
+          },
+
+          error: (
+            error
+          ) => {
+
+            if (
+              error.status === 409
+            ) {
+
+              this.errorMessage.set(
+                'PRODUCT WITH SAME ALREADY EXISTS'
+              );
+
+            } else {
+
+              this.errorMessage.set(
+                'PRODUCT SAVE FAILED'
+              );
+
+            }
+
+          }
+
+        });
+
+      return;
+
+    }
 
 
-        this.isSubmitting.set(false);
+    /* ===================================== */
+    /* CREATE */
+    /* ===================================== */
 
-        this.dialogRef.close(true);
+    this.productService
+      .createProduct(
+        formData
+      )
+      .pipe(
+        finalize(() => {
 
-      },
+          this.isSubmitting.set(false);
 
-      error: (error) => {
+        })
+      )
+      .subscribe({
 
+        next: () => {
 
-        this.isSubmitting.set(false);
-
-        if (error.status === 409) {
-
-          this.errorMessage.set(
-            'PRODUCT WITH SAME ALREADY EXISTS'
+          this.dialogRef.close(
+            true
           );
 
-        } else {
+        },
 
-          this.errorMessage.set(
-            'PRODUCT SAVE FAILED'
-          );
+        error: (
+          error
+        ) => {
+
+          if (
+            error.status === 409
+          ) {
+
+            this.errorMessage.set(
+              'PRODUCT WITH SAME ALREADY EXISTS'
+            );
+
+          } else {
+
+            this.errorMessage.set(
+              'PRODUCT SAVE FAILED'
+            );
+
+          }
 
         }
 
-      }
-
-    });
-
-} else {
-
-
-  this.productService
-    .createProduct(formData)
-    .subscribe({
-
-      next: () => {
-
-
-        this.isSubmitting.set(false);
-
-        this.dialogRef.close(true);
-
-      },
-
-      error: (error) => {
-
-
-        this.isSubmitting.set(false);
-if (error.status === 409) {
-
-          this.errorMessage.set(
-            'PRODUCT WITH SAME ALREADY EXISTS'
-          );
-
-        } else {
-
-          this.errorMessage.set(
-            'PRODUCT SAVE FAILED'
-          );
-
-        }
-
-      }
-
-    });
-
-}
+      });
 
   }
 

@@ -41,7 +41,7 @@
     "allSubCategories": "كل التصنيفات الفرعية",
     "allBrands": "كل العلامات التجارية",
     "clearFilters": "مسح الفلاتر",
-    "cosmetics": " LILY",
+    "cosmetics": " LILYSTORE",
     "login": "تسجيل الدخول",
     "logout": "تسجيل الخروج",
     "admin": "الإدارة",
@@ -156,6 +156,7 @@
     "noCategory":"____",
 
 "VARIANTS": {
+  "SELECT_HEEL_SIZES":"اختار مقاس الكعب",
 "TITLE": "خيارات المنتج",
 "SUBTITLE": "إدارة المقاسات ومقاسات الكعب والمخزون لهذا المنتج",
 "ADD": "إضافة خيار",
