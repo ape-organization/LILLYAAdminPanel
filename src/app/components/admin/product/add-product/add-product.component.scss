@@ -1,3 +1,5 @@
+
+
 /* =========================================================
    PRODUCT MODAL
    ========================================================= */
@@ -842,18 +844,23 @@ html[dir="rtl"] .form-field select {
   background: var(--color-surface-soft);
 }
 
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
 
 .save-button {
   min-width: 125px;
+  min-height: 40px;
 
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
 
-  gap: 7px;
+  gap: 8px;
+
+  padding: 0 18px;
 
   background: var(--color-primary) !important;
-
   color: #fff !important;
 
   font-size: 0.75rem;
@@ -865,6 +872,10 @@ html[dir="rtl"] .form-field select {
 }
 
 
+/* =========================================================
+   SAVE BUTTON HOVER
+   ========================================================= */
+
 .save-button:hover:not(:disabled) {
   background: #2f1f1a !important;
 
@@ -874,24 +885,101 @@ html[dir="rtl"] .form-field select {
 }
 
 
-.save-button:disabled,
-.cancel-button:disabled {
-  cursor: not-allowed;
+/* =========================================================
+   SAVE BUTTON DISABLED
+   ========================================================= */
 
-  opacity: 0.6;
+.save-button:disabled {
+  cursor: wait !important;
+
+  opacity: 1 !important;
+
+  background: var(--color-primary) !important;
 }
 
+
+/* =========================================================
+   SAVE ICON
+   ========================================================= */
 
 .save-button mat-icon {
   width: 18px;
   height: 18px;
 
   font-size: 18px;
+
+  flex-shrink: 0;
 }
 
 
+/* =========================================================
+   LOADING SPINNER
+   ========================================================= */
+
 .save-button mat-spinner {
-  --mdc-circular-progress-active-indicator-color: #fff;
+  display: inline-block !important;
+
+  width: 18px !important;
+  height: 18px !important;
+
+  min-width: 18px !important;
+  min-height: 18px !important;
+
+  flex: 0 0 18px;
+
+  margin: 0;
+
+  --mdc-circular-progress-active-indicator-color: #ffffff;
+}
+
+
+/* =========================================================
+   MATERIAL SPINNER SVG
+   ========================================================= */
+
+.save-button mat-spinner svg {
+  display: block !important;
+
+  width: 18px !important;
+  height: 18px !important;
+}
+
+
+/* =========================================================
+   MATERIAL SPINNER CIRCLE
+   ========================================================= */
+
+.save-button mat-spinner circle {
+  stroke: #ffffff !important;
+}
+
+
+/* =========================================================
+   MATERIAL MDC INTERNAL ELEMENT
+   ========================================================= */
+
+.save-button mat-spinner .mdc-circular-progress__indeterminate-container {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.save-button mat-spinner .mdc-circular-progress__spinner-layer {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+
+/* =========================================================
+   SAVING TEXT
+   ========================================================= */
+
+.save-button .saving-text {
+  display: inline-flex;
+  align-items: center;
+
+  line-height: 1;
+
+  white-space: nowrap;
 }
 
 

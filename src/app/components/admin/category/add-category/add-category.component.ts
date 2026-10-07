@@ -37,6 +37,7 @@ import {
 import {
   environment
 } from '../../../../../environments/environment';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -49,7 +50,8 @@ import {
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
-    TranslatePipe
+    TranslatePipe,
+    MatProgressSpinnerModule
   ],
 
   templateUrl:

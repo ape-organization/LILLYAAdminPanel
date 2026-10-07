@@ -322,10 +322,21 @@
             isSubmitting()
           "
         >
+    @if (isSubmitting()) {
 
-        <!--   <mat-icon>
-            save
-          </mat-icon> -->
+            <mat-spinner
+              diameter="20"
+            />
+          
+
+          } @else {
+
+            <mat-icon>
+              save
+            </mat-icon>
+
+          }
+
 
 
           {{

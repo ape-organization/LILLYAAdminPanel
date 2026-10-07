@@ -1135,3 +1135,15 @@ a {
       0.01ms !important;
   }
 }
+/* =========================================================
+   MATERIAL SPINNER
+   ========================================================= */
+
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: #C9A35E;
+  --mat-progress-spinner-active-indicator-color: #C9A35E;
+}
+
+.mat-mdc-progress-spinner circle {
+  stroke: #C9A35E !important;
+}
