@@ -1,35 +1,17 @@
-<div class="variants-section">
+ <div class="variants-section">
 
-  <!-- ========================================= -->
   <!-- HEADER -->
-  <!-- ========================================= -->
-
   <div class="section-header">
-
     <div class="section-title">
-
       <div class="section-icon">
-
-        <mat-icon>
-          tune
-        </mat-icon>
-
+        <mat-icon>tune</mat-icon>
       </div>
 
       <div>
-
-        <h2>
-          {{ 'products.VARIANTS.TITLE' | translate }}
-        </h2>
-
-        <p>
-          {{ 'products.VARIANTS.SUBTITLE' | translate }}
-        </p>
-
+        <h2>{{ 'products.VARIANTS.TITLE' | translate }}</h2>
+        <p>{{ 'products.VARIANTS.SUBTITLE' | translate }}</p>
       </div>
-
     </div>
-
 
     <button
       type="button"
@@ -38,399 +20,226 @@
       (click)="addVariant()"
       [disabled]="isLoading"
     >
-
-      <mat-icon>
-        add
-      </mat-icon>
-
+      <mat-icon>add</mat-icon>
       {{ 'products.VARIANTS.ADD' | translate }}
-
     </button>
-
   </div>
 
-
-  <!-- ========================================= -->
   <!-- QUICK VARIANT BUILDER -->
-  <!-- ========================================= -->
-
   <div class="variant-builder">
-
     <!-- SIZE -->
-
     <div class="builder-field">
-
-      <label>
-        {{ 'products.VARIANTS.SIZE' | translate }}
-      </label>
+      <label>{{ 'products.VARIANTS.SIZE' | translate }}</label>
 
       <select
         [(ngModel)]="selectedSizeId"
         [ngModelOptions]="{ standalone: true }"
       >
-
-        <option
-          [ngValue]="null"
-        >
+        <option [ngValue]="null">
           {{ 'products.VARIANTS.NO_SIZE' | translate }}
         </option>
 
-        @for (
-          size of sizes;
-          track size.id
-        ) {
-
-          <option
-            [ngValue]="size.id"
-          >
-
+        @for (size of sizes; track size.id) {
+          <option [ngValue]="size.id">
             {{ size.name }}
-
           </option>
-
         }
-
       </select>
-
     </div>
 
-
     <!-- MULTI HEEL SELECT -->
-
     <div class="builder-field heel-builder">
+      <label>{{ 'products.VARIANTS.HEEL_SIZE' | translate }}</label>
 
-      <label>
-        {{ 'products.VARIANTS.HEEL_SIZE' | translate }}
-      </label>
-
-
-      <div
-        class="multi-select"
-        [class.open]="heelDropdownOpen"
-      >
-
+      <div class="multi-select" [class.open]="heelDropdownOpen">
         <button
           type="button"
           class="multi-select-trigger"
           (click)="toggleHeelDropdown()"
         >
-
           <span
             class="multi-select-value"
-            [class.placeholder]="
-              selectedHeelSizeIds.length === 0
-            "
+            [class.placeholder]="selectedHeelSizeIds.length === 0"
           >
-
-            @if (
-              selectedHeelSizeIds.length === 0
-            ) {
-
+            @if (selectedHeelSizeIds.length === 0) {
               {{ 'products.VARIANTS.SELECT_HEEL_SIZES' | translate }}
-
             } @else {
-
               {{ getSelectedHeelLabel() }}
-
             }
-
           </span>
 
-
           <mat-icon>
-            {{
-              heelDropdownOpen
-                ? 'expand_less'
-                : 'expand_more'
-            }}
+            {{ heelDropdownOpen ? 'expand_less' : 'expand_more' }}
           </mat-icon>
-
         </button>
 
-
         @if (heelDropdownOpen) {
-
           <div class="multi-select-menu">
-
             @if (heelSizes.length === 0) {
-
               <div class="multi-select-empty">
-
                 {{ 'products.VARIANTS.NO_HEEL_SIZE' | translate }}
-
               </div>
-
             } @else {
-
-              @for (
-                heelSize of heelSizes;
-                track heelSize.id
-              ) {
-
-                <label
-                  class="multi-select-option"
-                >
-
+              @for (heelSize of heelSizes; track heelSize.id) {
+                <label class="multi-select-option">
                   <input
                     type="checkbox"
-                    [checked]="
-                      isHeelSelected(
-                        heelSize.id
-                      )
-                    "
-                    (change)="
-                      toggleHeelSize(
-                        heelSize.id
-                      )
-                    "
+                    [checked]="isHeelSelected(heelSize.id)"
+                    (change)="toggleHeelSize(heelSize.id)"
                   />
 
                   <span class="checkbox-box">
-
-                    @if (
-                      isHeelSelected(
-                        heelSize.id
-                      )
-                    ) {
-
-                      <mat-icon>
-                        check
-                      </mat-icon>
-
+                    @if (isHeelSelected(heelSize.id)) {
+                      <mat-icon>check</mat-icon>
                     }
-
                   </span>
 
-                  <span>
-                    {{ heelSize.name }}
-                  </span>
-
+                  <span>{{ heelSize.name }}</span>
                 </label>
-
               }
-
             }
-
           </div>
-
         }
-
       </div>
-
     </div>
-
   </div>
 
-
-  <!-- ========================================= -->
   <!-- EMPTY STATE -->
-  <!-- ========================================= -->
-
   @if (variants.length === 0) {
-
     <div class="empty-variants">
-
       <div class="empty-icon">
-
-        <mat-icon>
-          inventory_2
-        </mat-icon>
-
+        <mat-icon>inventory_2</mat-icon>
       </div>
 
-      <h3>
-        {{ 'products.VARIANTS.EMPTY_TITLE' | translate }}
-      </h3>
-
-      <p>
-        {{ 'products.VARIANTS.EMPTY_TEXT' | translate }}
-      </p>
-
-
+      <h3>{{ 'products.VARIANTS.EMPTY_TITLE' | translate }}</h3>
+      <p>{{ 'products.VARIANTS.EMPTY_TEXT' | translate }}</p>
     </div>
-
   }
 
-
-  <!-- ========================================= -->
   <!-- VARIANTS -->
-  <!-- ========================================= -->
-
   @if (variants.length > 0) {
-
     <div class="variants-list">
-
-      @for (
-        variant of variants.controls;
-        track variant;
-        let i = $index
-      ) {
-
+      @for (variant of variants.controls; track variant; let i = $index) {
         <div
           class="variant-row"
           [formGroup]="$any(variant)"
         >
-
           <!-- NUMBER -->
-
           <div class="variant-number">
-
             {{ i + 1 }}
-
           </div>
-
 
           <!-- SIZE -->
-
           <div class="variant-field">
+            <label>{{ 'products.VARIANTS.SIZE' | translate }}</label>
 
-            <label>
-              {{ 'products.VARIANTS.SIZE' | translate }}
-            </label>
-
-            <select
-              formControlName="sizeId"
-            >
-
-              <option
-                [ngValue]="null"
-              >
-
+            <select formControlName="sizeId">
+              <option [ngValue]="null">
                 {{ 'products.VARIANTS.NO_SIZE' | translate }}
-
               </option>
 
-              @for (
-                size of sizes;
-                track size.id
-              ) {
-
-                <option
-                  [ngValue]="size.id"
-                >
-
+              @for (size of sizes; track size.id) {
+                <option [ngValue]="size.id">
                   {{ size.name }}
-
                 </option>
-
               }
-
             </select>
-
           </div>
-
 
           <!-- HEEL -->
-
           <div class="variant-field">
-
-            <label>
-              {{ 'products.VARIANTS.HEEL_SIZE' | translate }}
-            </label>
+            <label>{{ 'products.VARIANTS.HEEL_SIZE' | translate }}</label>
 
             <div class="existing-heel">
-
-              @if (
-                variant.get('heelSizeId')?.value !== null
-              ) {
-
-                @for (
-                  heelSize of heelSizes;
-                  track heelSize.id
-                ) {
-
-                  @if (
-                    heelSize.id ===
-                    variant.get('heelSizeId')?.value
-                  ) {
-
+              @if (variant.get('heelSizeId')?.value !== null) {
+                @for (heelSize of heelSizes; track heelSize.id) {
+                  @if (heelSize.id === variant.get('heelSizeId')?.value) {
                     <span class="heel-value">
-
                       {{ heelSize.name }}
-
                     </span>
-
                   }
-
                 }
-
               } @else {
-
                 <span class="heel-none">
-
                   {{ 'products.VARIANTS.NO_HEEL_SIZE' | translate }}
-
                 </span>
-
               }
-
             </div>
-
           </div>
 
+          <!-- NEW: INDEPENDENT STOCK STATUS -->
+          <div class="stock-status-field">
+            <label class="stock-status-label">
+              {{ 'products.VARIANTS.STOCK_STATUS' | translate }}
+            </label>
+
+            <div class="stock-status-options">
+              <label
+                class="stock-status-option in-stock-option"
+                [class.selected]="isVariantInStock(variant)"
+              >
+                <input
+                  type="radio"
+                  [name]="'variant-stock-status-' + i"
+                  [checked]="isVariantInStock(variant)"
+                  (change)="setVariantStock(variant, true)"
+                />
+
+                <span>
+                  {{ 'products.VARIANTS.IN_STOCK' | translate }}
+                </span>
+              </label>
+
+              <label
+                class="stock-status-option out-of-stock-option"
+                [class.selected]="!isVariantInStock(variant)"
+              >
+                <input
+                  type="radio"
+                  [name]="'variant-stock-status-' + i"
+                  [checked]="!isVariantInStock(variant)"
+                  (change)="setVariantStock(variant, false)"
+                />
+
+                <span>
+                  {{ 'products.VARIANTS.OUT_OF_STOCK' | translate }}
+                </span>
+              </label>
+            </div>
+          </div>
 
           <!-- REMOVE -->
-
           <button
             type="button"
             class="remove-variant-button"
             mat-icon-button
             (click)="removeVariant(i)"
-            [attr.aria-label]="
-              'products.VARIANTS.REMOVE' | translate
-            "
+            [attr.aria-label]="'products.VARIANTS.REMOVE' | translate"
           >
-
-            <mat-icon>
-              delete_outline
-            </mat-icon>
-
+            <mat-icon>delete_outline</mat-icon>
           </button>
 
-
           <!-- VALIDATION -->
-
-          @if (
-            isVariantInvalid(variant)
-          ) {
-
+          @if (isVariantInvalid(variant)) {
             <div class="variant-error">
-
-              <mat-icon>
-                error_outline
-              </mat-icon>
+              <mat-icon>error_outline</mat-icon>
 
               <span>
                 {{ 'products.VARIANTS.SELECTION_REQUIRED' | translate }}
               </span>
-
             </div>
-
           }
-
         </div>
-
       }
-
     </div>
 
-
-    <!-- ========================================= -->
     <!-- INFORMATION -->
-    <!-- ========================================= -->
-
     <div class="variants-info">
-
-      <mat-icon>
-        info
-      </mat-icon>
+      <mat-icon>info</mat-icon>
 
       <span>
         {{ 'products.VARIANTS.INFO' | translate }}
       </span>
-
     </div>
-
   }
-
 </div>

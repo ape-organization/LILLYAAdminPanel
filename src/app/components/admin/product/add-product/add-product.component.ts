@@ -440,6 +440,9 @@ export class AddProductComponent implements OnInit {
           heelSizeId: [
             variant.heelSizeId ?? null
           ],
+ isInStock: [
+            variant.isInStock ?? true
+          ],
 
           stockQuantity: [
             variant.stockQuantity ?? 0,
@@ -782,7 +785,6 @@ export class AddProductComponent implements OnInit {
     const value =
       this.productForm.getRawValue();
 
-
     /* ===================================== */
     /* BASIC DATA */
     /* ===================================== */
@@ -928,6 +930,10 @@ export class AddProductComponent implements OnInit {
             variant.stockQuantity ?? 0
           )
         );
+        formData.append(
+  `Variants[${index}].IsInStock`,
+  String(variant.isInStock ?? true)
+);
 
       }
     );

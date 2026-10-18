@@ -152,9 +152,14 @@
   
 
   "products": {
+
+  
     "noCategory":"____",
     "noVariants":"______",
 "VARIANTS": {
+  "STOCK_STATUS": "Stock status",
+  "IN_STOCK": "In stock",
+  "OUT_OF_STOCK": "Out of stock",
   "SELECT_HEEL_SIZES":"SELECT HEEL SIZES",
 "TITLE": "Product Variants",
 "SUBTITLE": "Manage sizes, heels size, and stock for this product",

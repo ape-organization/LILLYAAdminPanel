@@ -1,7 +1,6 @@
 
 import {
   Component,
-  inject,
   Input
 } from '@angular/core';
 
@@ -10,23 +9,17 @@ import {
 } from '@angular/common';
 
 import {
+  FormsModule,
+  ReactiveFormsModule,
   AbstractControl,
   FormArray,
   FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 
 import {
   MatIconModule
 } from '@angular/material/icon';
-
-import {
-  MatButtonModule
-} from '@angular/material/button';
 
 import {
   TranslatePipe
@@ -40,489 +33,186 @@ import {
   HeelSize
 } from '../../../../models/heel-size.model';
 
-
 @Component({
   selector: 'app-product-variants',
-
   standalone: true,
 
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MatIconModule,
-    MatButtonModule,
-    TranslatePipe,
-  FormsModule
+    TranslatePipe
   ],
 
-  templateUrl:
-    './product-variants.component.html',
-
-  styleUrls:
-    ['./product-variants.component.scss']
+  templateUrl: './product-variants.component.html',
+  styleUrls: ['./product-variants.component.scss']
 })
 export class ProductVariantsComponent {
-
-  private readonly fb =
-    inject(FormBuilder);
-
+  private readonly fb = new FormBuilder();
 
   @Input({ required: true })
   variants!: FormArray;
 
-
   @Input()
   sizes: Size[] = [];
-
 
   @Input()
   heelSizes: HeelSize[] = [];
 
-
   @Input()
   isLoading = false;
 
+  selectedSizeId: number | null = null;
 
-  /*
-   * Temporary selections used only while
-   * creating a new variant.
-   */
-  selectedSizeId:
-    number | null = null;
+  selectedHeelSizeIds: number[] = [];
 
-  selectedHeelSizeIds:
-    number[] = [];
-
-
-  /*
-   * Controls the custom heel dropdown.
-   */
   heelDropdownOpen = false;
 
-
-  /* ========================================= */
-  /* ADD VARIANT */
-  /* ========================================= */
+  get variantControls(): AbstractControl[] {
+    return this.variants?.controls ?? [];
+  }
 
   addVariant(): void {
-
-    /*
-     * Keep the old "Add" behaviour.
-     *
-     * If nothing is selected, create one empty
-     * variant exactly like before.
-     */
     if (
-      this.selectedSizeId === null &&
+      this.isLoading ||
+      !this.variants ||
+      this.selectedSizeId === null ||
       this.selectedHeelSizeIds.length === 0
     ) {
-
-      this.variants.insert(
-        0,
-        this.createVariant()
-      );
-
       return;
-
     }
 
+    const sizeId = Number(this.selectedSizeId);
 
-    /*
-     * No heel sizes selected:
-     *
-     * create one Size-only variant.
-     */
-    if (
-      this.selectedHeelSizeIds.length === 0
-    ) {
+    for (const selectedHeelSizeId of this.selectedHeelSizeIds) {
+      const heelSizeId = Number(selectedHeelSizeId);
 
-      if (
-        this.selectedSizeId === null
-      ) {
+      // Prevent duplicate size + heel-size combinations.
+      const alreadyExists = this.variants.controls.some(
+        variant =>
+          Number(variant.get('sizeId')?.value) === sizeId &&
+          Number(variant.get('heelSizeId')?.value) === heelSizeId
+      );
 
-        this.variants.insert(
-          0,
-          this.createVariant()
-        );
-
-        return;
-
+      if (alreadyExists) {
+        continue;
       }
 
+      this.variants.push(
+        this.fb.group({
+          id: [null],
 
-      if (
-        this.variantExists(
-          this.selectedSizeId,
-          null
-        )
-      ) {
+          sizeId: [
+            sizeId,
+            Validators.required
+          ],
 
-        this.resetBuilder();
+          heelSizeId: [
+            heelSizeId,
+            Validators.required
+          ],
 
-        return;
+          stockQuantity: [
+            0,
+            [
+              Validators.required,
+              Validators.min(0)
+            ]
+          ],
 
-      }
-
-
-      this.variants.insert(
-        0,
-        this.createVariant(
-          this.selectedSizeId,
-          null
-        )
-      );
-
-      this.resetBuilder();
-
-      return;
-
-    }
-
-
-    /*
-     * Heel sizes selected.
-     *
-     * Create one backend variant for every
-     * selected heel size.
-     *
-     * Example:
-     *
-     * Size 38
-     * Heels 5, 7, 9
-     *
-     * becomes:
-     *
-     * 38 / 5
-     * 38 / 7
-     * 38 / 9
-     */
-    const variantsToAdd =
-      this.selectedHeelSizeIds
-        .filter(
-          heelSizeId =>
-            !this.variantExists(
-              this.selectedSizeId,
-              heelSizeId
-            )
-        );
-
-
-    /*
-     * Add in reverse order because insert(0)
-     * puts each new variant at the beginning.
-     */
-    for (
-      let i =
-        variantsToAdd.length - 1;
-      i >= 0;
-      i--
-    ) {
-
-      this.variants.insert(
-        0,
-        this.createVariant(
-          this.selectedSizeId,
-          variantsToAdd[i]
-        )
-      );
-
-    }
-
-
-    this.resetBuilder();
-
-  }
-
-
-  /* ========================================= */
-  /* REMOVE VARIANT */
-  /* ========================================= */
-
-  removeVariant(
-    index: number
-  ): void {
-
-    this.variants.removeAt(
-      index
-    );
-
-  }
-
-
-  /* ========================================= */
-  /* CREATE VARIANT */
-  /* ========================================= */
-
-  private createVariant(
-    sizeId: number | null = null,
-    heelSizeId: number | null = null
-  ): FormGroup {
-
-    return this.fb.group(
-      {
-
-        /*
-         * null = new variant.
-         */
-        id: [
-          null
-        ],
-
-        sizeId: [
-          sizeId
-        ],
-
-        heelSizeId: [
-          heelSizeId
-        ],
-
-        stockQuantity: [
-          0,
-          [
-            Validators.required,
-            Validators.min(0)
+          // Independent of stockQuantity.
+          isInStock: [
+            true,
+            Validators.required
           ]
-        ]
+        })
+      );
+    }
 
-      },
-      {
-        validators:
-          this.variantSelectionValidator
-      }
-    );
-
+    // Clear the selected heel sizes after adding variants.
+    this.selectedHeelSizeIds = [];
+    this.heelDropdownOpen = false;
   }
 
+  removeVariant(index: number): void {
+    if (
+      !this.variants ||
+      index < 0 ||
+      index >= this.variants.length
+    ) {
+      return;
+    }
 
-  /* ========================================= */
-  /* VARIANT EXISTS */
-  /* ========================================= */
-
-  private variantExists(
-    sizeId: number | null,
-    heelSizeId: number | null
-  ): boolean {
-
-    return this.variants.controls.some(
-      variant => {
-
-        const existingSizeId =
-          variant.get(
-            'sizeId'
-          )?.value ?? null;
-
-        const existingHeelSizeId =
-          variant.get(
-            'heelSizeId'
-          )?.value ?? null;
-
-        return (
-          existingSizeId === sizeId &&
-          existingHeelSizeId === heelSizeId
-        );
-
-      }
-    );
-
+    this.variants.removeAt(index);
   }
 
-
-  /* ========================================= */
-  /* HEEL DROPDOWN */
-  /* ========================================= */
-
-  toggleHeelDropdown(): void {
-
-    this.heelDropdownOpen =
-      !this.heelDropdownOpen;
-
-  }
-
-
-  closeHeelDropdown(): void {
-
-    this.heelDropdownOpen =
-      false;
-
-  }
-
-
-  /* ========================================= */
-  /* HEEL SELECTION */
-  /* ========================================= */
-
-  toggleHeelSize(
-    heelSizeId: number
+  setVariantStock(
+    variant: AbstractControl,
+    isInStock: boolean
   ): void {
+    // Change only IsInStock.
+    // StockQuantity remains untouched.
+    const control = variant.get('isInStock');
 
-    const index =
-      this.selectedHeelSizeIds.indexOf(
-        heelSizeId
-      );
-
-
-    if (index >= 0) {
-
-      this.selectedHeelSizeIds.splice(
-        index,
-        1
-      );
-
-    } else {
-
-      this.selectedHeelSizeIds.push(
-        heelSizeId
-      );
-
-    }
-
-    /*
-     * Replace the array reference so Angular
-     * updates immediately.
-     */
-    this.selectedHeelSizeIds =
-      [...this.selectedHeelSizeIds];
-
+    control?.setValue(isInStock);
+    control?.markAsDirty();
+    control?.markAsTouched();
+    control?.updateValueAndValidity();
   }
 
-
-  isHeelSelected(
-    heelSizeId: number
+  isVariantInStock(
+    variant: AbstractControl
   ): boolean {
-
-    return this.selectedHeelSizeIds.includes(
-      heelSizeId
-    );
-
+    return variant.get('isInStock')?.value === true;
   }
-
-
-  /* ========================================= */
-  /* SELECTED HEEL LABEL */
-  /* ========================================= */
-
-  getSelectedHeelLabel(): string {
-
-    if (
-      this.selectedHeelSizeIds.length === 0
-    ) {
-
-      return 'products.VARIANTS.SELECT_HEEL_SIZES';
-
-    }
-
-
-    if (
-      this.selectedHeelSizeIds.length === 1
-    ) {
-
-      const heel =
-        this.heelSizes.find(
-          item =>
-            item.id ===
-            this.selectedHeelSizeIds[0]
-        );
-
-
-      return heel?.name ??
-        'products.VARIANTS.SELECT_HEEL_SIZES';
-
-    }
-
-
-    return `${this.selectedHeelSizeIds.length} selected`;
-
-  }
-
-
-  /* ========================================= */
-  /* RESET BUILDER */
-  /* ========================================= */
-
-  private resetBuilder(): void {
-
-    this.selectedSizeId =
-      null;
-
-    this.selectedHeelSizeIds =
-      [];
-
-    this.heelDropdownOpen =
-      false;
-
-  }
-
-
-  /* ========================================= */
-  /* VALIDATION */
-  /* ========================================= */
-
-  private variantSelectionValidator(
-    control: AbstractControl
-  ): ValidationErrors | null {
-
-    const sizeId =
-      control.get(
-        'sizeId'
-      )?.value;
-
-    const heelSizeId =
-      control.get(
-        'heelSizeId'
-      )?.value;
-
-
-    if (
-      sizeId === null &&
-      heelSizeId === null
-    ) {
-
-      return {
-        variantSelectionRequired:
-          true
-      };
-
-    }
-
-
-    return null;
-
-  }
-
-
-  /* ========================================= */
-  /* INVALID VARIANT */
-  /* ========================================= */
 
   isVariantInvalid(
     variant: AbstractControl
   ): boolean {
+    const sizeId = variant.get('sizeId')?.value;
+    const heelSizeId = variant.get('heelSizeId')?.value;
 
     return (
-      variant.hasError(
-        'variantSelectionRequired'
-      ) &&
-      (
-        variant.get(
-          'sizeId'
-        )?.touched ||
-        variant.get(
-          'heelSizeId'
-        )?.touched
-      ) === true
+      sizeId === null ||
+      sizeId === undefined ||
+      heelSizeId === null ||
+      heelSizeId === undefined
     );
-
   }
 
-
-  /* ========================================= */
-  /* SELECTED HEEL COUNT */
-  /* ========================================= */
-
-  get selectedHeelCount(): number {
-
-    return this.selectedHeelSizeIds.length;
-
+  toggleHeelDropdown(): void {
+    this.heelDropdownOpen = !this.heelDropdownOpen;
   }
 
+  isHeelSelected(heelSizeId: number): boolean {
+    return this.selectedHeelSizeIds.includes(heelSizeId);
+  }
+
+  toggleHeelSize(heelSizeId: number): void {
+    if (this.isHeelSelected(heelSizeId)) {
+      this.selectedHeelSizeIds =
+        this.selectedHeelSizeIds.filter(
+          id => id !== heelSizeId
+        );
+    } else {
+      this.selectedHeelSizeIds = [
+        ...this.selectedHeelSizeIds,
+        heelSizeId
+      ];
+    }
+  }
+
+  getSelectedHeelLabel(): string {
+    return this.heelSizes
+      .filter(heel =>
+        this.selectedHeelSizeIds.includes(Number(heel.id))
+      )
+      .map(heel => heel.name)
+      .join(', ');
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
 }

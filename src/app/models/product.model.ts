@@ -45,4 +45,5 @@ export interface ProductVariant {
 
   stockQuantity: number;
   isActive?: boolean;
+   isInStock?: boolean;
 }

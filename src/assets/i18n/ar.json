@@ -152,10 +152,14 @@
  
 
   "products": {
+   
         "noVariants":"______",
     "noCategory":"____",
 
 "VARIANTS": {
+    "STOCK_STATUS": "حالة التوفر",
+  "IN_STOCK": "متوفر",
+  "OUT_OF_STOCK": "غير متوفر",
   "SELECT_HEEL_SIZES":"اختار مقاس الكعب",
 "TITLE": "خيارات المنتج",
 "SUBTITLE": "إدارة المقاسات ومقاسات الكعب والمخزون لهذا المنتج",
