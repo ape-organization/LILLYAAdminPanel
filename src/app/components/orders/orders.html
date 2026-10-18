@@ -410,7 +410,9 @@
                                       <strong>
                                         {{ item.productName }}
                                       </strong>
-
+<span *ngIf="item.productVariantId!=null">
+  {{item.sizeName}}  - {{item.heelSizeName}}
+</span>
                                     </div>
 
                                   </td>
@@ -518,7 +520,26 @@
                         </button>
 
                       }
+@if (
+                        order.status.toLowerCase() !== 'confirmed'
+                      ) {
 
+                        <button
+                          mat-stroked-button
+                          class="complete-btn"
+                          type="button"
+                          (click)="completeOrder(order)"
+                        >
+
+                          <mat-icon>
+                            complete
+                          </mat-icon>
+
+                          {{ 'orders.complete' | translate }}
+
+                        </button>
+
+                      }
                     </div>
 
                   </div>

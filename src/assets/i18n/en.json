@@ -428,6 +428,7 @@
     "orderItems": "Order Items",
     "noItems": "No items found.",
     "orderTotal": "Order Total",
-    "cancelOrder": "Cancel Order"
+    "cancelOrder": "Cancel Order",
+    "complete":"Complete Order"
   }
 }

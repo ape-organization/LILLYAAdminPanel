@@ -191,7 +191,6 @@ export class Orders implements OnInit {
       .subscribe({
 
         next: (response) => {
-
           this.orders.set(
             response.items ?? []
           );
@@ -516,7 +515,76 @@ export class Orders implements OnInit {
   // ==========================================================
   // CANCEL ORDER
   // ==========================================================
+completeOrder
+ (
+    order: Order
+  ): void {
 
+    if (
+      order.status?.toLowerCase() ===
+      'confirmed'
+    ) {
+
+      return;
+
+    }
+
+
+    this.dialog
+      .open(ConfirmDeleteComponent, {
+        data: `Are you sure you want to complete Order #${order.id}?`
+      })
+      .afterClosed()
+      .subscribe(result => {
+
+        if (!result?.status) {
+          return;
+        }
+
+
+        this.orderService
+          .completeOrder(
+            order.id
+          )
+          .subscribe({
+
+            next: () => {
+
+              this.orders.update(
+                orders =>
+                  orders.map(
+                    currentOrder =>
+                      currentOrder.id === order.id
+                        ? {
+                            ...currentOrder,
+                            status: 'Confirmed'
+                          }
+                        : currentOrder
+                  )
+              );
+
+            },
+
+
+            error: (error) => {
+
+
+
+              this.errorMessage.set(
+
+                error?.error?.message ||
+
+                'Failed to cancel order.'
+
+              );
+
+            }
+
+          });
+
+      });
+
+  }
   cancelOrder(
     order: Order
   ): void {

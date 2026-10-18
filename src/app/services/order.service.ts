@@ -74,7 +74,16 @@ getOrders(
     );
 
   }
+ completeOrder(
+    id: number
+  ): Observable<any> {
 
+    return this.http.put(
+      `${this.apiUrl}/${id}/complete`,
+      {}
+    );
+
+  }
 
   // ============================================================
   // DASHBOARD

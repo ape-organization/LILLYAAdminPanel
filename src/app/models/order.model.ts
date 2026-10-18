@@ -14,6 +14,16 @@ export interface OrderItem {
   unitPrice: number;
 
   totalPrice: number;
+
+heelSizeName: string;
+
+productVariantId: number;
+sizeName:string; 
+
+
+
+
+
 }
 
 

@@ -510,6 +510,14 @@
   margin-right: 4px;
 }
 
+.complete-btn {
+  border-color: rgb(2, 44, 2) !important;
+  color: rgb(2, 44, 2) !important;
+}
+
+.complete-btn mat-icon {
+  margin-right: 4px;
+}
 
 /* No items */
 
@@ -567,7 +575,8 @@
     width: 100%;
   }
 
-  .cancel-btn {
+  .cancel-btn,
+  .complete-btn {
     width: 100%;
   }
 }
