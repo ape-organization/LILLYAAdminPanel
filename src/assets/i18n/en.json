@@ -429,6 +429,16 @@
     "noItems": "No items found.",
     "orderTotal": "Order Total",
     "cancelOrder": "Cancel Order",
-    "complete":"Complete Order"
+    "complete":"Complete Order",
+    "searchById": "Search by order ID",
+    "search": "Search",
+    "clearSearch": "Clear search",
+    "noMatchingOrders": "No orders match the current filter.",
+    "filter": {
+      "all": "All",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
+    }
   }
 }

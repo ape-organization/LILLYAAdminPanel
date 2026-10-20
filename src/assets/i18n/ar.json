@@ -451,6 +451,16 @@
     "noItems": "لم يتم العثور على منتجات.",
     "orderTotal": "إجمالي الطلب",
     "cancelOrder": "إلغاء الطلب",
-    "complete":"الموافقة علي الطلب"
+    "complete":"الموافقة علي الطلب",
+    "searchById": "ابحث برقم الطلب",
+    "search": "بحث",
+    "clearSearch": "مسح البحث",
+    "noMatchingOrders": "لا توجد طلبات مطابقة للفلتر الحالي.",
+    "filter": {
+      "all": "الكل",
+      "pending": "قيد الانتظار",
+      "confirmed": "مؤكد",
+      "cancelled": "ملغي"
+    }
   }
 }

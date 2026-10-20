@@ -28,6 +28,91 @@
   </header>
 
 
+  <!-- TOOLBAR: SEARCH BY ID + STATUS FILTER -->
+  <div class="orders-toolbar">
+
+    <form
+      class="order-search"
+      (ngSubmit)="searchOrder()">
+
+      <mat-icon>
+        search
+      </mat-icon>
+
+      <input
+        type="number"
+        min="1"
+        name="searchId"
+        [(ngModel)]="searchId"
+        [placeholder]="'orders.searchById' | translate"
+      />
+
+      @if (searchedOrder() || searchError()) {
+
+        <button
+          mat-icon-button
+          type="button"
+          (click)="clearSearch()"
+          [attr.aria-label]="'orders.clearSearch' | translate">
+
+          <mat-icon>
+            close
+          </mat-icon>
+
+        </button>
+
+      }
+
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="searching()">
+
+        {{ 'orders.search' | translate }}
+
+      </button>
+
+    </form>
+
+
+    <div class="status-filter">
+
+      @for (status of statusOptions; track status) {
+
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="statusFilter() === status"
+          (click)="onStatusFilterChange(status)">
+
+          {{ 'orders.filter.' + status | translate }}
+
+        </button>
+
+      }
+
+    </div>
+
+  </div>
+
+
+  @if (searchError()) {
+
+    <div class="error-message">
+
+      <mat-icon>
+        error_outline
+      </mat-icon>
+
+      <span>
+        {{ searchError() }}
+      </span>
+
+    </div>
+
+  }
+
+
   <!-- ERROR -->
   @if (
     !loading() &&
@@ -141,6 +226,16 @@
 
 
         <tbody>
+
+          @if (!filteredOrders().length) {
+
+            <tr>
+              <td colspan="6" class="no-results">
+                {{ 'orders.noMatchingOrders' | translate }}
+              </td>
+            </tr>
+
+          }
 
           @for (
             order of paginatedOrders();

@@ -21,6 +21,7 @@ import { environment } from '../../../environments/environment';
 import { ConfirmDeleteComponent } from '../../shared/confirm-delete/confirm-delete.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
@@ -42,7 +43,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 
     MatSelectModule,
 
-    MatPaginatorModule
+    MatPaginatorModule,
+
+    FormsModule
 
   ],
 
@@ -121,6 +124,63 @@ export class Orders implements OnInit {
 
 
   // ==========================================================
+  // SEARCH / FILTER STATE
+  // ==========================================================
+
+  readonly statusOptions =
+    ['all', 'pending', 'confirmed', 'cancelled'] as const;
+
+
+  readonly statusFilter =
+    signal<string>('all');
+
+
+  searchId: number | null = null;
+
+
+  readonly searchedOrder =
+    signal<Order | null>(null);
+
+
+  readonly searching =
+    signal(false);
+
+
+  readonly searchError =
+    signal<string | null>(null);
+
+
+  // ==========================================================
+  // FILTERED ORDERS
+  // ==========================================================
+
+  readonly filteredOrders =
+    computed(() => {
+
+      const searched =
+        this.searchedOrder();
+
+      const source =
+        searched
+          ? [searched]
+          : this.orders();
+
+      const status =
+        this.statusFilter();
+
+      if (status === 'all') {
+        return source;
+      }
+
+      return source.filter(
+        order =>
+          order.status?.toLowerCase() === status
+      );
+
+    });
+
+
+  // ==========================================================
   // PAGINATED ORDERS
   // ==========================================================
 
@@ -128,7 +188,7 @@ export class Orders implements OnInit {
     computed(() => {
 
       const allOrders =
-        this.orders();
+        this.filteredOrders();
 
       const start =
         this.pageIndex() *
@@ -152,7 +212,7 @@ export class Orders implements OnInit {
 
   readonly totalOrders =
     computed(() =>
-      this.orders().length
+      this.filteredOrders().length
     );
 
 
@@ -364,6 +424,103 @@ export class Orders implements OnInit {
 
 
   // ==========================================================
+  // SEARCH BY ORDER ID
+  // ==========================================================
+
+  searchOrder(): void {
+
+    const id =
+      Number(this.searchId);
+
+    if (!id || id < 1) {
+
+      this.clearSearch();
+
+      return;
+
+    }
+
+
+    this.searching.set(true);
+
+    this.searchError.set(null);
+
+
+    this.orderService
+      .getOrder(id)
+      .subscribe({
+
+        next: (order) => {
+
+          this.searchedOrder.set(order);
+
+          this.pageIndex.set(0);
+
+          this.expandedOrderId.set(
+            order.id
+          );
+
+          this.searching.set(false);
+
+        },
+
+
+        error: (error) => {
+
+          this.searchedOrder.set(null);
+
+          this.searching.set(false);
+
+          this.searchError.set(
+
+            error?.status === 404
+              ? `Order #${id} not found.`
+              : error?.error?.message ||
+                error?.message ||
+                'Failed to load order.'
+
+          );
+
+        }
+
+      });
+
+  }
+
+
+  clearSearch(): void {
+
+    this.searchId = null;
+
+    this.searchedOrder.set(null);
+
+    this.searchError.set(null);
+
+    this.pageIndex.set(0);
+
+    this.expandedOrderId.set(null);
+
+  }
+
+
+  // ==========================================================
+  // STATUS FILTER
+  // ==========================================================
+
+  onStatusFilterChange(
+    status: string
+  ): void {
+
+    this.statusFilter.set(status);
+
+    this.pageIndex.set(0);
+
+    this.expandedOrderId.set(null);
+
+  }
+
+
+  // ==========================================================
   // PAGINATION
   // ==========================================================
 
@@ -563,6 +720,17 @@ completeOrder
                   )
               );
 
+
+              this.searchedOrder.update(
+                current =>
+                  current?.id === order.id
+                    ? {
+                        ...current,
+                        status: 'Confirmed'
+                      }
+                    : current
+              );
+
             },
 
 
@@ -630,6 +798,17 @@ completeOrder
                           }
                         : currentOrder
                   )
+              );
+
+
+              this.searchedOrder.update(
+                current =>
+                  current?.id === order.id
+                    ? {
+                        ...current,
+                        status: 'Cancelled'
+                      }
+                    : current
               );
 
             },
