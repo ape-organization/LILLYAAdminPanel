@@ -38,7 +38,7 @@ export interface Order {
   phoneNumber: string;
 
   address: string | null;
-
+note:string|null;
   email: string | null;
 
   orderDate: string;

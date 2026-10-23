@@ -251,6 +251,7 @@ export class Orders implements OnInit {
       .subscribe({
 
         next: (response) => {
+          console.log(response)
           this.orders.set(
             response.items ?? []
           );

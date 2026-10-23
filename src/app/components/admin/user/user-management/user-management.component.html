@@ -1,30 +1,31 @@
-
-<div class="management-container">
+<div class="admin-page">
 
   <!-- Header -->
-  <div class="header-actions">
+  <header class="page-header">
 
-    <div class="page-heading">
+    <div class="header-content">
 
-      <div class="heading-icon">
+      <span class="header-icon">
         <mat-icon>people</mat-icon>
-      </div>
+      </span>
 
       <div>
-        <h2>
+
+        <h1>
           {{ 'users.management' | translate }}
-        </h2>
+        </h1>
 
         <p>
           {{ 'users.description' | translate }}
         </p>
+
       </div>
 
     </div>
 
     <button
       mat-raised-button
-      class="add-button"
+      class="primary-btn"
       type="button"
       (click)="showAddUser()"
     >
@@ -34,120 +35,87 @@
 
     </button>
 
-  </div>
+  </header>
 
 
-  <!-- Users Table -->
-  <div class="table-responsive">
+  <!-- Users List -->
+  @let users = (dataSource().connect() | async) ?? [];
 
-    <table
-      mat-table
-      [dataSource]="dataSource()"
-    >
+  <div class="data-list users-list">
 
-      <!-- Username -->
-      <ng-container matColumnDef="username">
+    <div class="list-head">
 
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'users.user' | translate }}
-        </th>
+      <span>{{ 'users.user' | translate }}</span>
+      <span>{{ 'users.email' | translate }}</span>
+      <span>{{ 'common.actions' | translate }}</span>
 
-        <td mat-cell *matCellDef="let user">
+    </div>
 
-          <div class="user-info">
 
-            <div class="user-avatar">
-              <mat-icon>person</mat-icon>
-            </div>
+    @for (user of users; track user.id) {
 
-            <span class="user-name">
+      <div class="list-row">
+
+        <!-- Username -->
+        <div class="cell primary-cell">
+
+          <span class="avatar">
+            {{ (user.name || '?').charAt(0) }}
+          </span>
+
+          <div class="primary-text">
+
+            <strong>
               {{ user.name }}
-            </span>
+            </strong>
 
-          </div>
-
-        </td>
-
-      </ng-container>
-
-
-      <!-- Email -->
-      <ng-container matColumnDef="email">
-
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'users.email' | translate }}
-        </th>
-
-        <td mat-cell *matCellDef="let user">
-
-          <div class="email-cell">
-
-            <mat-icon>email</mat-icon>
-
-            <span>
+            <small class="mobile-email">
               {{ user.email }}
-            </span>
+            </small>
 
           </div>
 
-        </td>
-
-      </ng-container>
+        </div>
 
 
-      <!-- Actions -->
-      <ng-container matColumnDef="actions">
+        <!-- Email -->
+        <div class="cell email-cell">
 
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'common.actions' | translate }}
-        </th>
+          <mat-icon>mail</mat-icon>
 
-        <td mat-cell *matCellDef="let user">
+          <span>
+            {{ user.email }}
+          </span>
 
-          <div class="action-buttons">
-
-            <button
-              mat-icon-button
-              type="button"
-              class="edit-button"
-              [attr.aria-label]="'common.edit' | translate"
-              (click)="editUser(user)"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-
-            <button
-              mat-icon-button
-              type="button"
-              class="delete-button"
-              [attr.aria-label]="'common.delete' | translate"
-              (click)="deleteUser(user)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-
-          </div>
-
-        </td>
-
-      </ng-container>
+        </div>
 
 
-      <!-- Rows -->
-      <tr
-        mat-header-row
-        *matHeaderRowDef="displayedColumns"
-      ></tr>
+        <!-- Actions -->
+        <div class="cell row-actions">
 
-      <tr
-        mat-row
-        *matRowDef="
-          let row;
-          columns: displayedColumns
-        "
-      ></tr>
+          <button
+            type="button"
+            class="icon-btn edit"
+            [attr.aria-label]="'common.edit' | translate"
+            (click)="editUser(user)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
 
-    </table>
+          <button
+            type="button"
+            class="icon-btn delete"
+            [attr.aria-label]="'common.delete' | translate"
+            (click)="deleteUser(user)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+
+        </div>
+
+      </div>
+
+    }
 
   </div>
 

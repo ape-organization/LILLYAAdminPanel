@@ -1,29 +1,37 @@
-
-<div class="management-container">
+<div class="admin-page">
 
   <!-- HEADER -->
-  <header class="header-actions">
+  <header class="page-header">
 
-    <div class="page-heading">
+    <div class="header-content">
 
-      <div class="heading-icon">
-        <mat-icon>home</mat-icon>
-      </div>
+      <span class="header-icon">
+        <mat-icon>view_carousel</mat-icon>
+      </span>
 
       <div>
-        <h2>{{ 'sliders.management' | translate }}</h2>
+
+        <h1>
+          {{ 'sliders.management' | translate }}
+
+          <span class="header-count">
+            {{ sliders().length }}
+          </span>
+        </h1>
+
         <p>{{ 'sliders.description' | translate }}</p>
+
       </div>
 
     </div>
 
     <button
       mat-raised-button
-      class="add-category-btn"
+      class="primary-btn"
       type="button"
       (click)="showAddSlider()">
 
-      <mat-icon>add</mat-icon>
+      <mat-icon>add_photo_alternate</mat-icon>
 
       {{ 'sliders.addSlider' | translate }}
 
@@ -32,109 +40,64 @@
   </header>
 
 
-  <!-- TABLE -->
-  <div class="table-responsive">
+  <!-- GRID -->
+  <div class="slide-grid">
 
-    <table
-      mat-table
-      [dataSource]="paginatedCategories()">
+    @for (slider of paginatedCategories(); track $index) {
 
+      <article class="slide-card">
 
-      <!-- SLIDER -->
-      <ng-container matColumnDef="name">
+        <div class="slide-media">
 
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'sliders.slider' | translate }}
-        </th>
+          @if (slider.imageUrl) {
 
-        <td
-          mat-cell
-          *matCellDef="let slider"
-          class="category-name">
+            <img
+              [src]="getImageUrl(slider.imageUrl)"
+              [alt]="'sliders.slider' | translate"
+              loading="lazy">
 
-          <div class="category-name-wrapper">
+          } @else {
 
-            <div class="category-image-wrapper">
+            <mat-icon>image</mat-icon>
 
-              @if (slider.imageUrl) {
+          }
 
-                <img
-                  class="category-image"
-                  [src]="getImageUrl(slider.imageUrl)"
-                  >
+          <span class="slide-index">
+            {{ pageIndex() * pageSize() + $index + 1 }}
+          </span>
 
-              } @else {
-
-                <mat-icon class="category-image-placeholder">
-                  home
-                </mat-icon>
-
-              }
-
-            </div>
-
-          
-
-          </div>
-
-        </td>
-
-      </ng-container>
+        </div>
 
 
+        <div class="slide-footer">
 
-      <!-- ACTIONS -->
-      <ng-container matColumnDef="actions">
-
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          class="actions-header">
-
-          {{ 'common.actions' | translate }}
-
-        </th>
-
-        <td
-          mat-cell
-          *matCellDef="let slider"
-          class="actions-cell">
+          <span class="slide-label">
+            <mat-icon>image</mat-icon>
+            {{ 'sliders.slider' | translate }} #{{ pageIndex() * pageSize() + $index + 1 }}
+          </span>
 
           <button
-            mat-icon-button
-            class="edit-btn"
             type="button"
+            class="icon-btn edit"
+            [attr.aria-label]="'sliders.editSlider' | translate"
             (click)="editSlider(slider)">
 
             <mat-icon>edit</mat-icon>
 
           </button>
 
-        
+        </div>
 
-        </td>
+      </article>
 
-      </ng-container>
+    }
 
-
-      <!-- ROWS -->
-      <tr
-        mat-header-row
-        *matHeaderRowDef="displayedColumns">
-      </tr>
-
-      <tr
-        mat-row
-        *matRowDef="
-          let row;
-          columns: displayedColumns;
-        ">
-      </tr>
-
-    </table>
+  </div>
 
 
-    <!-- PAGINATION -->
+  <!-- PAGINATION -->
+  <div class="list-footer">
+
     <mat-paginator
       [length]="sliders().length"
       [pageIndex]="pageIndex()"

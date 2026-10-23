@@ -434,6 +434,7 @@
     "search": "Search",
     "clearSearch": "Clear search",
     "noMatchingOrders": "No orders match the current filter.",
+    "note": "Order Note",
     "filter": {
       "all": "All",
       "pending": "Pending",
