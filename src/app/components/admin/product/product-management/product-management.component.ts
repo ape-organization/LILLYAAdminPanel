@@ -1293,6 +1293,9 @@ this.products.set([]);
 
           maxHeight: '95vh',
 
+          // Goes full screen on phones (see styles.scss)
+          panelClass: 'product-dialog',
+
           data: {
             isEditing,
             product

@@ -1147,3 +1147,26 @@ a {
 .mat-mdc-progress-spinner circle {
   stroke: #C9A35E !important;
 }
+
+/* =========================================================
+   PRODUCT DIALOG (add / edit product)
+   ========================================================= */
+
+.product-dialog .mat-mdc-dialog-surface {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+@media (max-width: 600px) {
+
+  .cdk-overlay-pane.product-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh;
+    max-height: 100dvh !important;
+  }
+
+  .product-dialog .mat-mdc-dialog-surface {
+    border-radius: 0;
+  }
+}

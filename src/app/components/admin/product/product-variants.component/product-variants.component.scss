@@ -1,7 +1,14 @@
 
 /* =========================================================
    VARIANTS SECTION
+   Responsive rules use container queries: this lives inside
+   the product dialog, so the viewport width is misleading.
    ========================================================= */
+
+:host {
+  display: block;
+  container-type: inline-size;
+}
 
 .variants-section {
   padding: 24px;
@@ -391,9 +398,12 @@
 .variants-list {
   display: flex;
   flex-direction: column;
-  height: 200px;
-  overflow-y: scroll;
   gap: 10px;
+}
+
+/* Room for the absolutely positioned validation message */
+.variant-row:has(.variant-error) {
+  margin-bottom: 14px;
 }
 
 /* VARIANT ROW
@@ -696,7 +706,7 @@
 
 /* TABLET */
 
-@media (max-width: 1100px) and (min-width: 701px) {
+@container (max-width: 860px) {
   .variant-row {
     grid-template-columns:
       36px
@@ -718,7 +728,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@container (max-width: 760px) {
   .variant-builder {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
@@ -726,7 +736,7 @@
 
 /* MOBILE */
 
-@media (max-width: 700px) {
+@container (max-width: 640px) {
   .variants-section {
     padding: 16px;
     border-radius: 15px;
@@ -824,11 +834,17 @@
     min-height: 200px;
     padding: 25px 16px;
   }
+
+  /* 16px stops iOS from zooming into focused selects */
+  .builder-field select,
+  .variant-field select {
+    font-size: 16px;
+  }
 }
 
 /* SMALL MOBILE */
 
-@media (max-width: 420px) {
+@container (max-width: 400px) {
   .variants-section {
     padding: 13px;
   }
