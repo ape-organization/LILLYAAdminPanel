@@ -269,22 +269,25 @@
             </span>
 
 
-            <!-- DATE -->
-            <span class="summary-date">
+            <!-- DATE + ITEMS (grid columns on desktop, one row on mobile) -->
+            <span class="summary-meta">
 
-              <mat-icon>calendar_today</mat-icon>
+              <span class="summary-date">
 
-              {{ order.orderDate | date:'dd/MM/yyyy' }}
+                <mat-icon>calendar_today</mat-icon>
 
-            </span>
+                {{ order.orderDate | date:'dd/MM/yyyy' }}
+
+              </span>
 
 
-            <!-- ITEMS -->
-            <span class="summary-items">
+              <span class="summary-items">
 
-              <mat-icon>inventory_2</mat-icon>
+                <mat-icon>inventory_2</mat-icon>
 
-              {{ getItemsCount(order) }}
+                {{ getItemsCount(order) }}
+
+              </span>
 
             </span>
 
